@@ -17,7 +17,6 @@ namespace Outernet.LBEToolkit
         private string _password;
         private string _reconstructionID;
         private string _destination;
-        private bool _initialized;
 
         [MenuItem("Window/Reconstruction Download Helper")]
         public static void ShowWindow()
