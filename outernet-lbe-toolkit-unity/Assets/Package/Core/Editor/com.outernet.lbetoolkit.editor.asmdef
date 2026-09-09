@@ -2,21 +2,9 @@
     "name": "com.outernet.lbetoolkit.editor",
     "rootNamespace": "",
     "references": [
-        "GUID:d8b63aba1907145bea998dd612889d6b",
-        "GUID:f51ebe6a0ceec4240a699833d6309b23",
-        "GUID:1fc69d160eafe774ab0a8e5191500311",
-        "GUID:4847341ff46394e83bb78fbd0652937e",
         "GUID:7b4dc6ec4a7211e42a5e4416bc3e8f45",
-        "GUID:dc45d6bbcc15bf245b038035793d5e2e",
-        "GUID:97e795bc3b8dfbd42aafc10933e43ff4",
-        "GUID:e40ba710768534012815d3193fa296cb",
-        "GUID:f9fe0089ec81f4079af78eb2287a6163",
-        "GUID:ce522b6ed64c8be4c989a1d26d0e3275",
-        "GUID:b76c1d084090fa34d9ef08917c2a0845",
-        "GUID:251962950e671c049bdb5ecb16442b37",
-        "GUID:3c19a664dfbb4efaac8ace360ae478aa",
-        "GUID:eaea37e9ecc8d6541969256c43bbf381",
-        "GUID:e03122bd8b73cbd419044538320f821e"
+        "GUID:f51ebe6a0ceec4240a699833d6309b23",
+        "GUID:b76c1d084090fa34d9ef08917c2a0845"
     ],
     "includePlatforms": [
         "Editor"

@@ -1,0 +1,18 @@
+{
+  "name": "com.outernet.lbetoolkit",
+  "version": "1.0.0",
+  "displayName": "LBE Toolkit",
+  "description": "",
+  "unity": "6000.0",
+  "author": {
+    "name": "Elliot Pjecha",
+    "email": "epjecha@gmail.com"
+  },
+  "dependencies": {
+    "com.cysharp.unitask": "2.5.10",
+    "com.fofx.stateful": "1.0.0",
+    "org.outernet.placeframe": "0.0.0-local",
+    "org.nuget.placeframeapiclient": "0.0.1",
+    "com.unity.mathematics": "1.3.2"
+  }
+}
