@@ -1,0 +1,8 @@
+{
+  "package": "com.plerion.makeitsing",
+  "builds": ["android-mobile", "magicleap"],
+  "execute_methods": {
+    "android-mobile": "Outernet.Build.BuildForAndroidMobile",
+    "magicleap": "Outernet.Build.BuildForMagicLeap"
+  }
+}

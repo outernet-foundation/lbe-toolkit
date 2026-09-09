@@ -1,0 +1,16 @@
+*.csproj
+*.sln
+*.lscache
+Assets/Packages/
+Build/
+Builds/
+Library/
+Logs/
+Temp/
+UserSettings/
+Assets/_LocalWorkspace
+Assets/_LocalWorkspace.meta
+Recordings/
+.vs/
+.utmp/
+**/FR2_Cache.asset*
