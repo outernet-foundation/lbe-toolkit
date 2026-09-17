@@ -57,6 +57,7 @@ MonoBehaviour:
   m_Name: MagicLeapDepthRangeChangeFeature Android
   m_EditorClassIdentifier: 
   m_enabled: 0
+  <failedInitialization>k__BackingField: 0
   nameUi: Magic Leap 2 Depth Range Change
   version: 1.0.0
   featureIdInternal: com.magicleap.openxr.feature.depth_range_change
@@ -66,6 +67,7 @@ MonoBehaviour:
   targetOpenXRApiVersion: 
   required: 0
   customRuntimeLoaderName: 
+  <SessionState>k__BackingField: 0
 --- !u!114 &-8197777680590650296
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -372,6 +374,7 @@ MonoBehaviour:
   version: 1.0.0
   featureIdInternal: com.magicleap.openxr.feature.ml2
   openxrExtensionStrings: XR_ML_compat XR_KHR_convert_timespec_time XR_EXT_view_configuration_depth_range
+    XR_ML_view_configuration_depth_range_change
   company: Magic Leap
   priority: 0
   targetOpenXRApiVersion: 
@@ -423,7 +426,6 @@ MonoBehaviour:
   - {fileID: -4350684783942605412}
   - {fileID: 2708400596251727686}
   - {fileID: 6344260889937871580}
-  - {fileID: -8914198911731715070}
   - {fileID: 6127508130338824824}
   - {fileID: -4496584359295222360}
   - {fileID: 3395718865617959334}
@@ -658,6 +660,7 @@ MonoBehaviour:
   version: 1.0.0
   featureIdInternal: com.magicleap.openxr.feature.ml2
   openxrExtensionStrings: XR_ML_compat XR_KHR_convert_timespec_time XR_EXT_view_configuration_depth_range
+    XR_ML_view_configuration_depth_range_change
   company: Magic Leap
   priority: 0
   targetOpenXRApiVersion: 
@@ -913,7 +916,6 @@ MonoBehaviour:
   - {fileID: 456046978852027719}
   - {fileID: -7528359899748644880}
   - {fileID: 4631965894855515804}
-  - {fileID: 1080524211850509565}
   - {fileID: 6688564747037304086}
   - {fileID: -3189883396919091286}
   - {fileID: 8703962303714867802}
@@ -1182,6 +1184,7 @@ MonoBehaviour:
   m_Name: MagicLeapDepthRangeChangeFeature Standalone
   m_EditorClassIdentifier: 
   m_enabled: 0
+  <failedInitialization>k__BackingField: 0
   nameUi: Magic Leap 2 Depth Range Change
   version: 1.0.0
   featureIdInternal: com.magicleap.openxr.feature.depth_range_change
@@ -1191,6 +1194,7 @@ MonoBehaviour:
   targetOpenXRApiVersion: 
   required: 0
   customRuntimeLoaderName: 
+  <SessionState>k__BackingField: 0
 --- !u!114 &1188911462297031776
 MonoBehaviour:
   m_ObjectHideFlags: 0

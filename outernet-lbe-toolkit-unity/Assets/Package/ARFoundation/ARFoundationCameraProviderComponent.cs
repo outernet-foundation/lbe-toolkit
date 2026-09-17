@@ -11,6 +11,6 @@ namespace Outernet.LBEToolkit.ARFoundation
         public ARAnchorManager anchorManager;
 
         protected override ICameraProvider GetInstance()
-            => new CameraProvider(cameraManager, anchorManager);
+            => new ARFoundationCameraProvider(cameraManager, anchorManager);
     }
 }

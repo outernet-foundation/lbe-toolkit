@@ -4,25 +4,25 @@
       "name": "npmjs",
       "url": "https://registry.npmjs.org",
       "scopes": [
-        "com.magicleap",
-        "org.outernet"
+        "com.magicleap"
       ]
     },
     {
-      "name": "UnityNuGet",
-      "url": "https://unitynuget-registry.openupm.com",
+      "name": "package.openupm.com",
+      "url": "https://package.openupm.com",
       "scopes": [
-        "org.nuget"
+        "com.fofx",
+        "com.cysharp",
+        "org.nuget",
+        "org.outernet"
       ]
     }
   ],
   "dependencies": {
-    "com.cysharp.r3": "https://github.com/Cysharp/R3.git?path=src/R3.Unity/Assets/R3.Unity#1.2.9",
-    "com.cysharp.unitask": "https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask",
+    "com.cysharp.unitask": "2.5.11",
     "com.fofx.nessle": "https://github.com/outernet-foundation/Nessle.git?path=Assets/Package/Core#f08f16104b913f1f4911bc740e7f1952ec813733",
-    "com.fofx.observething": "https://github.com/outernet-foundation/ObserveThing.git?path=Assets/Package/Core",
-    "com.fofx.stateful": "https://github.com/epjecha/StatefulUnity.git?path=Assets/Package",
-    "com.github-glitchenzo.nugetforunity": "https://github.com/GlitchEnzo/NuGetForUnity.git?path=/src/NuGetForUnity",
+    "com.fofx.observething": "1.0.0",
+    "com.fofx.stateful": "1.0.0",
     "com.magicleap.unitysdk": "2.5.0",
     "com.unity.2d.sprite": "1.0.0",
     "com.unity.ai.navigation": "2.0.9",
@@ -46,11 +46,10 @@
     "com.unity.xr.management": "4.5.3",
     "com.unity.xr.openxr": "1.16.1",
     "io.livekit.livekit-sdk": "https://github.com/livekit/client-sdk-unity.git",
-    "org.nuget.placeframeapiclient": "https://github.com/outernet-foundation/placeframe.git?path=packages/generated/csharp/api-client/src/PlaceframeApiClient#c331312419035833db0187851bb98943b5bc165f",
-    "org.outernet.logging": "https://github.com/outernet-foundation/placeframe.git?path=packages/unity/Logging/Assets/Package#c331312419035833db0187851bb98943b5bc165f",
-    "org.outernet.placeframe": "https://github.com/outernet-foundation/placeframe.git?path=packages/unity/Placeframe/Assets/Package/Core#c61c980e8b76e5689402f8871f791dc29f7ce044",
-    "org.outernet.placeframe.arfoundation": "https://github.com/outernet-foundation/placeframe.git?path=packages/unity/Placeframe/Assets/Package/ARFoundation#c61c980e8b76e5689402f8871f791dc29f7ce044",
-    "org.outernet.placeframe.magicleap": "https://github.com/outernet-foundation/placeframe.git?path=packages/unity/Placeframe/Assets/Package/MagicLeap#c61c980e8b76e5689402f8871f791dc29f7ce044",
+    "org.nuget.placeframeapiclient": "file:C:/Users/epjec/Documents/Plerion/packages/generated/csharp/api-client/src/PlaceframeApiClient",
+    "org.outernet.placeframe": "file:C:/Users/epjec/Documents/Plerion/packages/unity/Placeframe/Assets/Package/Core",
+    "org.outernet.placeframe.arfoundation": "file:C:/Users/epjec/Documents/Plerion/packages/unity/Placeframe/Assets/Package/ARFoundation",
+    "org.outernet.placeframe.magicleap": "file:C:/Users/epjec/Documents/Plerion/packages/unity/Placeframe/Assets/Package/MagicLeap",
     "com.unity.modules.accessibility": "1.0.0",
     "com.unity.modules.ai": "1.0.0",
     "com.unity.modules.androidjni": "1.0.0",

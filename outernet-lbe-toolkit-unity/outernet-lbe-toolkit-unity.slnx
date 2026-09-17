@@ -30,7 +30,6 @@
   <Project Path="Unity.VisualScripting.Flow.Editor.csproj" />
   <Project Path="Unity.XR.Interaction.Toolkit.csproj" />
   <Project Path="Unity.XR.ARSubsystems.csproj" />
-  <Project Path="Outernet.Logging.csproj" />
   <Project Path="Unity.VisualStudio.Editor.csproj" />
   <Project Path="ObserveThing.csproj" />
   <Project Path="Unity.InputSystem.csproj" />
@@ -74,7 +73,6 @@
   <Project Path="Unity.XR.Hands.Analytics.Editor.csproj" />
   <Project Path="MagicLeap.SDK.Editor.csproj" />
   <Project Path="Unity.XR.CoreUtils.Editor.csproj" />
-  <Project Path="NuGetForUnity.csproj" />
   <Project Path="Unity.AI.Navigation.Editor.csproj" />
   <Project Path="Stateful.Editor.csproj" />
   <Project Path="Unity.2D.Sprite.Editor.csproj" />
@@ -106,7 +104,7 @@
   <Project Path="Unity.ShaderGraph.Utilities.csproj" />
   <Project Path="Unity.XR.Interaction.Toolkit.Samples.SpatialKeyboard.Editor.csproj" />
   <Project Path="Unity.VisualScripting.Shared.Editor.csproj" />
-  <Project Path="Placeframe.Core.ARFoundation.csproj" />
+  <Project Path="R3.Unity.TextMeshPro.csproj" />
   <Project Path="Unity.XR.ARFoundation.InternalUtils.csproj" />
   <Project Path="Unity.XR.ARFoundation.Editor.csproj" />
   <Project Path="Unity.EditorCoroutines.Editor.csproj" />
@@ -127,6 +125,7 @@
   <Project Path="Unity.XR.OpenXR.Features.RuntimeDebugger.Editor.csproj" />
   <Project Path="glTFast.dots.csproj" />
   <Project Path="Placeframe.Core.MagicLeap.csproj" />
+  <Project Path="R3.Unity.XRInteractionToolkit.csproj" />
   <Project Path="Unity.Rendering.LightTransport.Editor.csproj" />
   <Project Path="Unity.InputSystem.DocCodeSamples.csproj" />
   <Project Path="Unity.RenderPipelines.Universal.Shaders.csproj" />
@@ -144,6 +143,7 @@
   <Project Path="Unity.XR.Interaction.Toolkit.Samples.Hands.Editor.csproj" />
   <Project Path="UnityEditor.SpatialTracking.csproj" />
   <Project Path="UniTask.Addressables.csproj" />
+  <Project Path="Placeframe.Core.ARFoundation.csproj" />
   <Project Path="Assembly-CSharp-Editor.csproj" />
   <Project Path="Unity.Collections.Editor.csproj" />
   <Project Path="UniTask.DOTween.csproj" />
