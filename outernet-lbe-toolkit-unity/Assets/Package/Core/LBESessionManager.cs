@@ -21,7 +21,6 @@ namespace Outernet.LBEToolkit
         public float localizationInterval;
         public bool joinRoomAutomatically;
 
-        public InterfaceReference<IStateSyncManager> c;
 
         [ToggleGroup(nameof(joinRoomAutomatically))]
         public string roomToJoin;
