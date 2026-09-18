@@ -1,0 +1,16 @@
+{
+  "name": "com.outernet.lbetoolkit.livekit",
+  "version": "0.0.1",
+  "displayName": "LBE Toolkit - Livekit",
+  "description": "LiveKit support for the LBE Toolkit",
+  "unity": "6000.0",
+  "author": {
+    "name": "Elliot Pjecha",
+    "email": "epjecha@gmail.com"
+  },
+  "dependencies": {
+    "com.cysharp.unitask": "2.5.11",
+    "com.outernet.lbetoolkit": "0.0.2",
+    "io.livekit.livekit-sdk": "2.0.0"
+  }
+}

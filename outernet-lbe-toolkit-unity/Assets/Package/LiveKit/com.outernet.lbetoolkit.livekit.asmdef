@@ -1,12 +1,10 @@
 {
-    "name": "com.outernet.lbetoolkit",
+    "name": "com.outernet.lbetoolkit.livekit",
     "rootNamespace": "",
     "references": [
-        "GUID:dc45d6bbcc15bf245b038035793d5e2e",
         "GUID:f51ebe6a0ceec4240a699833d6309b23",
-        "GUID:b76c1d084090fa34d9ef08917c2a0845",
-        "GUID:eaea37e9ecc8d6541969256c43bbf381",
-        "GUID:d8b63aba1907145bea998dd612889d6b",
+        "GUID:702f733b4deb246808c6ce84d93b5c9c",
+        "GUID:6766e57ef9b3da840acf25fa51482d60",
         "GUID:8fccc2a72f89cad46b5f374c8caec181"
     ],
     "includePlatforms": [],

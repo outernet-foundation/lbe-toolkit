@@ -1,7 +1,6 @@
 ﻿<Solution>
   <Project Path="Unity.Timeline.csproj" />
   <Project Path="Unity.VisualEffectGraph.Editor.csproj" />
-  <Project Path="LiveKit.csproj" />
   <Project Path="Unity.RenderPipelines.GPUDriven.Runtime.csproj" />
   <Project Path="Unity.PlasticSCM.Editor.csproj" />
   <Project Path="Editor.csproj" />
@@ -44,6 +43,7 @@
   <Project Path="Unity.XR.Hands.csproj" />
   <Project Path="Unity.XR.ARCore.csproj" />
   <Project Path="UnityEditor.TestRunner.csproj" />
+  <Project Path="LiveKit.csproj" />
   <Project Path="Unity.RenderPipelines.Universal.Runtime.csproj" />
   <Project Path="Unity.VisualScripting.Core.csproj" />
   <Project Path="Unity.AI.Navigation.Editor.ConversionSystem.csproj" />
@@ -84,13 +84,16 @@
   <Project Path="Placeframe.Core.Editor.csproj" />
   <Project Path="Unity.XR.Interaction.Toolkit.Samples.SpatialKeyboard.csproj" />
   <Project Path="Unity.XR.OpenXR.Features.MetaQuestSupport.Editor.csproj" />
+  <Project Path="Placeframe.Core.MagicLeap.csproj" />
   <Project Path="Unity.XR.Interaction.Toolkit.Samples.Hands.csproj" />
   <Project Path="Unity.InputSystem.ForUI.csproj" />
   <Project Path="R3.Unity.Editor.csproj" />
   <Project Path="Unity.AI.Navigation.csproj" />
+  <Project Path="Placeframe.Auth.csproj" />
   <Project Path="Unity.Collections.CodeGen.csproj" />
   <Project Path="Unity.XR.Interaction.Toolkit.Samples.StarterAssets.csproj" />
   <Project Path="Unity.XR.Management.csproj" />
+  <Project Path="LiveKit.UniTask.csproj" />
   <Project Path="Unity.Mathematics.Editor.csproj" />
   <Project Path="Unity.VisualScripting.SettingsProvider.Editor.csproj" />
   <Project Path="Unity.XR.Hands.Editor.csproj" />
@@ -124,7 +127,6 @@
   <Project Path="UnityEngine.XR.LegacyInputHelpers.csproj" />
   <Project Path="Unity.XR.OpenXR.Features.RuntimeDebugger.Editor.csproj" />
   <Project Path="glTFast.dots.csproj" />
-  <Project Path="Placeframe.Core.MagicLeap.csproj" />
   <Project Path="R3.Unity.XRInteractionToolkit.csproj" />
   <Project Path="Unity.Rendering.LightTransport.Editor.csproj" />
   <Project Path="Unity.InputSystem.DocCodeSamples.csproj" />
@@ -132,6 +134,7 @@
   <Project Path="Unity.RenderPipelines.Core.Runtime.Shared.csproj" />
   <Project Path="Unity.Toolchain.Linux-x86_64.csproj" />
   <Project Path="Unity.Sysroot.Linux_x86_64.csproj" />
+  <Project Path="com.outernet.lbetoolkit.livekit.csproj" />
   <Project Path="Unity.XR.ARAnalytics.Editor.csproj" />
   <Project Path="com.outernet.lbetoolkit.statesynchronization.tests.csproj" />
   <Project Path="Unity.XR.ARFoundation.InternalUtils.Editor.csproj" />
@@ -145,6 +148,7 @@
   <Project Path="UniTask.Addressables.csproj" />
   <Project Path="Placeframe.Core.ARFoundation.csproj" />
   <Project Path="Assembly-CSharp-Editor.csproj" />
+  <Project Path="com.outernet.lbetoolkit.photon.csproj" />
   <Project Path="Unity.Collections.Editor.csproj" />
   <Project Path="UniTask.DOTween.csproj" />
   <Project Path="Unity.RenderPipelines.Universal.Config.Runtime.csproj" />

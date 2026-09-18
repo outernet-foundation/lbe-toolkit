@@ -191,12 +191,16 @@ namespace Outernet.LBEToolkit.StateSynchronization
 
             var identity = Guid.NewGuid();
             var tokenProvider = new TokenSourceSandbox(sandboxId);
-            var connectionDetails = await tokenProvider.FetchConnectionDetails(new()
+            var fetchConnectionDetailsTask = tokenProvider.FetchConnectionDetails(new()
             {
                 RoomName = roomID,
                 ParticipantIdentity = identity.ToString(),
                 ParticipantName = identity.ToString()
             });
+
+            await fetchConnectionDetailsTask;
+
+            var connectionDetails = fetchConnectionDetailsTask.Result;
 
             _room = new Room();
             _room.ParticipantConnected += HandleParticipantConnected;

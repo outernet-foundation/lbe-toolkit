@@ -3,8 +3,8 @@ using UnityEditor;
 using System;
 using Cysharp.Threading.Tasks;
 using Placeframe.Core;
+using Placeframe.Auth;
 using System.Linq;
-using Outernet.LBEToolkit.Authorization;
 
 namespace Outernet.LBEToolkit
 {

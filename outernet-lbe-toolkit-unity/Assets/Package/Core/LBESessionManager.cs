@@ -4,6 +4,7 @@ using Outernet.LBEToolkit.Localization;
 using Outernet.LBEToolkit.StateSynchronization;
 using Outernet.LBEToolkit.Authorization;
 using UnityEngine;
+using Placeframe.Core;
 
 namespace Outernet.LBEToolkit
 {
@@ -19,6 +20,8 @@ namespace Outernet.LBEToolkit
         public StateSyncManagerComponent stateSynchronizationManager;
         public float localizationInterval;
         public bool joinRoomAutomatically;
+
+        public InterfaceReference<IStateSyncManager> c;
 
         [ToggleGroup(nameof(joinRoomAutomatically))]
         public string roomToJoin;

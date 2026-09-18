@@ -6,6 +6,7 @@ using Cysharp.Threading.Tasks;
 using LiveKit;
 using LiveKit.Proto;
 using UnityEngine;
+using Cysharp.Threading;
 
 namespace Outernet.LBEToolkit.StateSynchronization
 {
@@ -153,12 +154,16 @@ namespace Outernet.LBEToolkit.StateSynchronization
             _connected = true;
 
             var tokenProvider = new TokenSourceEndpoint(endpointUrl, null);
-            var connectionDetails = await tokenProvider.FetchConnectionDetails(new()
+            var fetchConnectionDetailsTask = tokenProvider.FetchConnectionDetails(new()
             {
                 RoomName = roomID,
                 ParticipantIdentity = SystemInfo.deviceUniqueIdentifier,
                 ParticipantName = SystemInfo.deviceUniqueIdentifier
             });
+
+            await fetchConnectionDetailsTask;
+
+            var connectionDetails = fetchConnectionDetailsTask.Result;
 
             _room = new Room();
             _room.ParticipantConnected += HandleParticipantConnected;
