@@ -329,8 +329,8 @@ GameObject:
   - component: {fileID: 998282273}
   - component: {fileID: 998282272}
   - component: {fileID: 998282271}
-  - component: {fileID: 998282270}
-  - component: {fileID: 998282269}
+  - component: {fileID: 998282277}
+  - component: {fileID: 998282276}
   m_Layer: 0
   m_Name: App
   m_TagString: Untagged
@@ -399,32 +399,6 @@ MonoBehaviour:
   clientId: 
   username: user
   password: password
---- !u!114 &998282269
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 998282262}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eeb44c01576282c4ea011dd5f59612c2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &998282270
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 998282262}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 867e6a5c463640943b5b5c83003ad1e0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cameraManager: {fileID: 0}
-  anchorManager: {fileID: 0}
 --- !u!114 &998282271
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -439,13 +413,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   apiUrl: 
   authorizationProvider: {fileID: 998282268}
-  cameraProvider: {fileID: 998282269}
+  cameraProvider: {fileID: 998282276}
   localizationMapProvider: {fileID: 998282267}
   realtimeClient: {fileID: 998282272}
   stateSynchronizationManager: {fileID: 0}
   localizationInterval: 0
   joinRoomAutomatically: 0
+  c:
+    value:
+      rid: -2
   roomToJoin: 
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
 --- !u!114 &998282272
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -498,6 +480,32 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   identity: 
+--- !u!114 &998282276
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 998282262}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f41630eb798a2748940b9d150056c21, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _arCameraManager: {fileID: 0}
+  _arAnchorManager: {fileID: 0}
+--- !u!114 &998282277
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 998282262}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aedb29180985d6345acd636bb74f0824, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &1062968969 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4602545692698748480, guid: 3ec6940ce4a115c43a800218f2bf785c, type: 3}
