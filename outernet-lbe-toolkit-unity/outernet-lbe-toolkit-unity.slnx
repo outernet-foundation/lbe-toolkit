@@ -120,8 +120,8 @@
   <Project Path="Assembly-CSharp.csproj" />
   <Project Path="UniTask.Editor.csproj" />
   <Project Path="Unity.XR.OpenXR.Features.RuntimeDebugger.csproj" />
-  <Project Path="com.outernet.lbetoolkit.editor.csproj" />
   <Project Path="UnityEngine.SpatialTracking.csproj" />
+  <Project Path="com.outernet.lbetoolkit.editor.csproj" />
   <Project Path="Unity.XR.OpenXR.Features.OculusQuestSupport.Editor.csproj" />
   <Project Path="Unity.SysrootPackage.Editor.csproj" />
   <Project Path="UnityEngine.XR.LegacyInputHelpers.csproj" />

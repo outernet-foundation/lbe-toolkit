@@ -322,15 +322,8 @@ GameObject:
   m_Component:
   - component: {fileID: 998282264}
   - component: {fileID: 998282268}
-  - component: {fileID: 998282275}
-  - component: {fileID: 998282267}
-  - component: {fileID: 998282274}
   - component: {fileID: 998282266}
-  - component: {fileID: 998282273}
-  - component: {fileID: 998282272}
   - component: {fileID: 998282271}
-  - component: {fileID: 998282270}
-  - component: {fileID: 998282269}
   m_Layer: 0
   m_Name: App
   m_TagString: Untagged
@@ -369,19 +362,6 @@ MonoBehaviour:
   selfHosted: 0
   selfHostedIp: 
   selfHostedPort: 0
---- !u!114 &998282267
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 998282262}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4f08e31d88ec0244c8996e86f549f342, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  mapLoadRadius: 1000
 --- !u!114 &998282268
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -399,32 +379,6 @@ MonoBehaviour:
   clientId: 
   username: user
   password: password
---- !u!114 &998282269
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 998282262}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eeb44c01576282c4ea011dd5f59612c2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &998282270
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 998282262}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 867e6a5c463640943b5b5c83003ad1e0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cameraManager: {fileID: 0}
-  anchorManager: {fileID: 0}
 --- !u!114 &998282271
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -439,65 +393,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   apiUrl: 
   authorizationProvider: {fileID: 998282268}
-  cameraProvider: {fileID: 998282269}
-  localizationMapProvider: {fileID: 998282267}
-  realtimeClient: {fileID: 998282272}
+  cameraProvider: {fileID: 0}
+  localizationMapProvider: {fileID: 0}
+  realtimeClient: {fileID: 998282266}
   stateSynchronizationManager: {fileID: 0}
   localizationInterval: 0
   joinRoomAutomatically: 0
   roomToJoin: 
---- !u!114 &998282272
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 998282262}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 97b6b6335fc016446bc33d91c7ce93a8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  endpointUrl: 
---- !u!114 &998282273
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 998282262}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: daa96d6c06ff8e749954e3ad3d0d74da, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sandboxId: 
---- !u!114 &998282274
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 998282262}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 358db1dc55ddaf54891b2b43053ce442, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _maps: []
---- !u!114 &998282275
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 998282262}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ff14b59b1eb3b5846b798e29bf2d0f70, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  identity: 
 --- !u!4 &1062968969 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4602545692698748480, guid: 3ec6940ce4a115c43a800218f2bf785c, type: 3}
