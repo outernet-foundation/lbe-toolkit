@@ -1,9 +1,10 @@
 {
-  "name": "com.outernet.lbetoolkit",
-  "version": "0.0.2",
+  "name": "com.fofx.lbetoolkit",
+  "version": "0.0.0-local",
   "displayName": "LBE Toolkit",
-  "description": "",
+  "description": "Location-based entertainment toolkit for Unity.",
   "unity": "6000.0",
+  "license": "MIT",
   "author": {
     "name": "Elliot Pjecha",
     "email": "epjecha@gmail.com"
@@ -12,6 +13,6 @@
     "com.cysharp.unitask": "2.5.11",
     "com.fofx.stateful": "1.0.0",
     "com.fofx.observething": "1.0.0",
-    "org.outernet.placeframe": "1.0.6-preview"
+    "org.outernet.placeframe": "1.0.5"
   }
 }
