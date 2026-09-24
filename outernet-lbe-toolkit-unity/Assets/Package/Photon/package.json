@@ -1,15 +1,16 @@
 {
-  "name": "com.outernet.lbetoolkit.photon",
-  "version": "0.0.1",
+  "name": "org.outernet.lbetoolkit.photon",
+  "version": "0.0.0-local",
   "displayName": "LBE Toolkit - Photon",
   "description": "Photon support for the LBE Toolkit",
   "unity": "6000.0",
+  "license": "MIT",
   "author": {
     "name": "Elliot Pjecha",
     "email": "epjecha@gmail.com"
   },
   "dependencies": {
     "com.cysharp.unitask": "2.5.11",
-    "com.outernet.lbetooklit": "0.0.2"
+    "com.fofx.lbetoolkit": "1.0.0"
   }
 }

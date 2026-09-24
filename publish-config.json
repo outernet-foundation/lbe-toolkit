@@ -1,0 +1,30 @@
+{
+  "packages": [
+    {
+      "name": "lbetoolkit-core",
+      "path": "outernet-lbe-toolkit-unity/Assets/Package/Core",
+      "major_minor": "1.0",
+      "feeds": { "npm": "com.fofx.lbetoolkit" }
+    },
+    {
+      "name": "lbetoolkit-livekit",
+      "path": "outernet-lbe-toolkit-unity/Assets/Package/LiveKit",
+      "major_minor": "1.0",
+      "feeds": { "npm": "com.fofx.lbetoolkit.livekit" },
+      "depends_on": ["lbetoolkit-core"],
+      "dependency_pins": { "com.fofx.lbetoolkit": "lbetoolkit-core" }
+    },
+    {
+      "name": "lbetoolkit-photon",
+      "path": "outernet-lbe-toolkit-unity/Assets/Package/Photon",
+      "major_minor": "1.0",
+      "feeds": { "npm": "com.fofx.lbetoolkit.photon" },
+      "depends_on": ["lbetoolkit-core"],
+      "dependency_pins": { "com.fofx.lbetoolkit": "lbetoolkit-core" }
+    }
+  ],
+  "apps": [],
+  "compose_files": [],
+  "ci_workflow": "ci.yml",
+  "mirror_prefix": "ghcr.io/outernet-foundation/mirror"
+}
