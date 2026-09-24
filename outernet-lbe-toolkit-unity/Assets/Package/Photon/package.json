@@ -1,5 +1,5 @@
 {
-  "name": "com.fofx.lbetoolkit.photon",
+  "name": "org.outernet.lbetoolkit.photon",
   "version": "0.0.0-local",
   "displayName": "LBE Toolkit - Photon",
   "description": "Photon support for the LBE Toolkit",

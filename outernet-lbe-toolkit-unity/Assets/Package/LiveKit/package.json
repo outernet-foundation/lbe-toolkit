@@ -1,5 +1,5 @@
 {
-  "name": "com.fofx.lbetoolkit.livekit",
+  "name": "org.outernet.lbetoolkit.livekit",
   "version": "0.0.0-local",
   "displayName": "LBE Toolkit - Livekit",
   "description": "LiveKit support for the LBE Toolkit",

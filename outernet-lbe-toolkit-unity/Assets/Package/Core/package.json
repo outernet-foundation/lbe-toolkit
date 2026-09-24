@@ -1,5 +1,5 @@
 {
-  "name": "com.fofx.lbetoolkit",
+  "name": "org.outernet.lbetoolkit",
   "version": "0.0.0-local",
   "displayName": "LBE Toolkit",
   "description": "Location-based entertainment toolkit for Unity.",
