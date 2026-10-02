@@ -1,8 +1,8 @@
 {
   "dependencies": {
     "com.cysharp.r3": {
-      "version": "1.2.9",
-      "depth": 1,
+      "version": "1.3.1",
+      "depth": 0,
       "source": "registry",
       "dependencies": {
         "com.unity.modules.imgui": "1.0.0"
@@ -11,19 +11,19 @@
     },
     "com.cysharp.unitask": {
       "version": "2.5.11",
-      "depth": 0,
+      "depth": 1,
       "source": "registry",
       "dependencies": {},
       "url": "https://package.openupm.com"
     },
     "com.fofx.nessle": {
-      "version": "https://github.com/outernet-foundation/Nessle.git?path=Assets/Package/Core#f08f16104b913f1f4911bc740e7f1952ec813733",
+      "version": "1.0.0",
       "depth": 0,
-      "source": "git",
+      "source": "registry",
       "dependencies": {
         "com.fofx.observething": "1.0.0"
       },
-      "hash": "f08f16104b913f1f4911bc740e7f1952ec813733"
+      "url": "https://registry.npmjs.org"
     },
     "com.fofx.observething": {
       "version": "1.0.0",
@@ -42,18 +42,18 @@
       "url": "https://registry.npmjs.org"
     },
     "com.magicleap.unitysdk": {
-      "version": "2.5.0",
-      "depth": 0,
+      "version": "2.6.0",
+      "depth": 1,
       "source": "registry",
       "dependencies": {
-        "com.unity.burst": "1.8.9",
-        "com.unity.xr.openxr": "1.11.0",
-        "com.unity.collections": "2.2.1",
-        "com.unity.inputsystem": "1.8.2",
+        "com.unity.xr.openxr": "1.13.0",
         "com.unity.xr.arfoundation": "5.1.0",
-        "com.unity.modules.androidjni": "1.0.0",
         "com.unity.xr.interaction.toolkit": "2.1.0",
-        "com.unity.xr.interactionsubsystems": "2.0.0"
+        "com.unity.inputsystem": "1.8.2",
+        "com.unity.modules.androidjni": "1.0.0",
+        "com.unity.xr.interactionsubsystems": "2.0.0",
+        "com.unity.collections": "2.2.1",
+        "com.unity.burst": "1.8.9"
       },
       "url": "https://registry.npmjs.org"
     },
@@ -476,7 +476,7 @@
     },
     "org.nuget.microsoft.bcl.asyncinterfaces": {
       "version": "6.0.0",
-      "depth": 3,
+      "depth": 2,
       "source": "registry",
       "dependencies": {
         "org.nuget.system.threading.tasks.extensions": "4.5.4"
@@ -485,7 +485,7 @@
     },
     "org.nuget.microsoft.bcl.timeprovider": {
       "version": "8.0.0",
-      "depth": 3,
+      "depth": 1,
       "source": "registry",
       "dependencies": {
         "org.nuget.microsoft.bcl.asyncinterfaces": "6.0.0"
@@ -497,26 +497,6 @@
       "depth": 2,
       "source": "registry",
       "dependencies": {},
-      "url": "https://package.openupm.com"
-    },
-    "org.nuget.observablecollections": {
-      "version": "3.3.4",
-      "depth": 2,
-      "source": "registry",
-      "dependencies": {
-        "org.nuget.system.memory": "4.5.4",
-        "org.nuget.system.runtime.compilerservices.unsafe": "6.0.0"
-      },
-      "url": "https://package.openupm.com"
-    },
-    "org.nuget.observablecollections.r3": {
-      "version": "3.3.4",
-      "depth": 1,
-      "source": "registry",
-      "dependencies": {
-        "org.nuget.observablecollections": "3.3.4",
-        "org.nuget.r3": "1.0.0"
-      },
       "url": "https://package.openupm.com"
     },
     "org.nuget.polly": {
@@ -541,8 +521,8 @@
       "url": "https://package.openupm.com"
     },
     "org.nuget.r3": {
-      "version": "1.0.0",
-      "depth": 2,
+      "version": "1.3.1",
+      "depth": 0,
       "source": "registry",
       "dependencies": {
         "org.nuget.microsoft.bcl.timeprovider": "8.0.0",
@@ -566,21 +546,21 @@
     },
     "org.nuget.system.buffers": {
       "version": "4.5.1",
-      "depth": 3,
+      "depth": 1,
       "source": "registry",
       "dependencies": {},
       "url": "https://package.openupm.com"
     },
     "org.nuget.system.componentmodel.annotations": {
       "version": "5.0.0",
-      "depth": 3,
+      "depth": 1,
       "source": "registry",
       "dependencies": {},
       "url": "https://package.openupm.com"
     },
     "org.nuget.system.memory": {
       "version": "4.5.5",
-      "depth": 3,
+      "depth": 1,
       "source": "registry",
       "dependencies": {
         "org.nuget.system.buffers": "4.5.1",
@@ -591,21 +571,21 @@
     },
     "org.nuget.system.numerics.vectors": {
       "version": "4.4.0",
-      "depth": 3,
+      "depth": 2,
       "source": "registry",
       "dependencies": {},
       "url": "https://package.openupm.com"
     },
     "org.nuget.system.runtime.compilerservices.unsafe": {
       "version": "6.0.0",
-      "depth": 3,
+      "depth": 1,
       "source": "registry",
       "dependencies": {},
       "url": "https://package.openupm.com"
     },
     "org.nuget.system.threading.channels": {
       "version": "8.0.0",
-      "depth": 3,
+      "depth": 1,
       "source": "registry",
       "dependencies": {
         "org.nuget.system.threading.tasks.extensions": "4.5.4"
@@ -614,7 +594,7 @@
     },
     "org.nuget.system.threading.tasks.extensions": {
       "version": "4.5.4",
-      "depth": 3,
+      "depth": 2,
       "source": "registry",
       "dependencies": {
         "org.nuget.system.runtime.compilerservices.unsafe": "4.5.3"
@@ -622,64 +602,68 @@
       "url": "https://package.openupm.com"
     },
     "org.outernet.placeframe": {
-      "version": "1.0.6-dev.35815669170",
+      "version": "https://github.com/outernet-foundation/placeframe.git?path=packages/unity/Placeframe/Assets/Package/Core#feature/dependency-cleanup-cont",
       "depth": 0,
-      "source": "registry",
+      "source": "git",
       "dependencies": {
-        "com.cysharp.r3": "1.2.9",
-        "org.nuget.polly": "8.8.0",
-        "com.cysharp.unitask": "2.5.10",
-        "com.unity.mathematics": "1.3.2",
-        "org.nuget.sharpziplib": "1.4.2",
-        "com.unity.cloud.gltfast": "6.15.1",
+        "com.cysharp.unitask": "2.5.11",
+        "com.cysharp.r3": "1.3.1",
         "com.unity.xr.arfoundation": "6.0.6",
+        "com.unity.mathematics": "1.3.2",
+        "com.unity.cloud.gltfast": "6.15.1",
+        "org.outernet.placeframe.apiclient": "0.0.0+local",
         "org.nuget.mathnet.numerics": "5.0.0",
-        "org.outernet.placeframe.apiclient": "0.1.8-dev.35815669170",
-        "org.nuget.observablecollections.r3": "3.3.4"
+        "org.nuget.sharpziplib": "1.4.2",
+        "org.nuget.polly": "8.8.0",
+        "org.nuget.r3": "1.3.1"
       },
-      "url": "https://registry.npmjs.org"
+      "hash": "b8aa1ec80d639b429ff653bf672c3b5f6a4681a5"
     },
     "org.outernet.placeframe.apiclient": {
-      "version": "0.1.8-dev.35815669170",
+      "version": "https://github.com/outernet-foundation/placeframe.git?path=packages/generated/csharp/api-client/src/PlaceframeApiClient#feature/dependency-cleanup-cont",
       "depth": 0,
-      "source": "registry",
+      "source": "git",
       "dependencies": {
+        "com.unity.nuget.newtonsoft-json": "3.2.1",
         "org.nuget.polly": "8.1.0",
-        "org.nuget.jsonsubtypes": "2.0.1",
-        "com.unity.nuget.newtonsoft-json": "3.2.1"
+        "org.nuget.jsonsubtypes": "2.0.1"
       },
-      "url": "https://registry.npmjs.org"
+      "hash": "b8aa1ec80d639b429ff653bf672c3b5f6a4681a5"
     },
     "org.outernet.placeframe.arfoundation": {
-      "version": "1.0.6-dev.35815669170",
+      "version": "https://github.com/outernet-foundation/placeframe.git?path=packages/unity/Placeframe/Assets/Package/ARFoundation#feature/dependency-cleanup-cont",
       "depth": 0,
-      "source": "registry",
+      "source": "git",
       "dependencies": {
-        "com.cysharp.r3": "1.2.9",
-        "com.cysharp.unitask": "2.5.10",
-        "org.outernet.placeframe": "1.0.6-dev.35815669170",
-        "com.unity.xr.arfoundation": "6.0.6"
+        "org.outernet.placeframe": "0.0.0+local",
+        "com.cysharp.unitask": "2.5.11",
+        "com.cysharp.r3": "1.3.1",
+        "com.unity.xr.arfoundation": "6.0.6",
+        "org.nuget.r3": "1.3.1"
       },
-      "url": "https://registry.npmjs.org"
+      "hash": "b8aa1ec80d639b429ff653bf672c3b5f6a4681a5"
     },
     "org.outernet.placeframe.auth": {
-      "version": "0.1.0-dev.35815669170",
+      "version": "https://github.com/outernet-foundation/placeframe.git?path=packages/unity/Placeframe/Assets/Package/Auth#feature/dependency-cleanup-cont",
       "depth": 0,
-      "source": "registry",
+      "source": "git",
       "dependencies": {
         "com.cysharp.unitask": "2.5.10"
       },
-      "url": "https://registry.npmjs.org"
+      "hash": "b8aa1ec80d639b429ff653bf672c3b5f6a4681a5"
     },
     "org.outernet.placeframe.magicleap": {
-      "version": "1.0.6-dev.35815669170",
+      "version": "https://github.com/outernet-foundation/placeframe.git?path=packages/unity/Placeframe/Assets/Package/MagicLeap#feature/dependency-cleanup-cont",
       "depth": 0,
-      "source": "registry",
+      "source": "git",
       "dependencies": {
-        "com.cysharp.unitask": "2.5.10",
-        "org.outernet.placeframe": "1.0.6-dev.35815669170"
+        "org.outernet.placeframe": "0.0.0+local",
+        "com.cysharp.unitask": "2.5.11",
+        "com.cysharp.r3": "1.3.1",
+        "com.magicleap.unitysdk": "2.6.0",
+        "org.nuget.r3": "1.3.1"
       },
-      "url": "https://registry.npmjs.org"
+      "hash": "2079841838bb1db24bb0642a037ded428e315a02"
     },
     "com.unity.modules.accessibility": {
       "version": "1.0.0",

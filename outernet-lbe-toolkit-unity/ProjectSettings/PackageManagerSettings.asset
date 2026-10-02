@@ -34,7 +34,9 @@ MonoBehaviour:
     m_Name: npmjs
     m_Url: https://registry.npmjs.org
     m_Scopes:
+    - com.fofx
     - com.magicleap
+    - org.outernet
     m_IsDefault: 0
     m_Capabilities: 0
     m_ConfigSource: 4
@@ -45,17 +47,16 @@ MonoBehaviour:
     m_Name: package.openupm.com
     m_Url: https://package.openupm.com
     m_Scopes:
-    - com.fofx
     - com.cysharp
+    - io.livekit
     - org.nuget
-    - org.outernet
     m_IsDefault: 0
     m_Capabilities: 0
     m_ConfigSource: 4
     m_Compliance:
       m_Status: 0
       m_Violations: []
-  m_UserSelectedRegistryName: package.openupm.com
+  m_UserSelectedRegistryName: npmjs
   m_UserAddingNewScopedRegistry: 0
   m_RegistryInfoDraft:
     m_Modified: 0
