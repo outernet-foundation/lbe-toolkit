@@ -11,7 +11,8 @@
   },
   "dependencies": {
     "com.cysharp.unitask": "2.5.11",
-    "com.fofx.lbetoolkit": "1.0.0",
+    "org.outernet.lbetoolkit": "0.0.0+local",
+    "com.outernet.lbetoolkit.statesynchronization": "0.0.0+local",
     "io.livekit.livekit-sdk": "2.0.0"
   }
 }

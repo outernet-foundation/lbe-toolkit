@@ -16,15 +16,6 @@
       "dependencies": {},
       "url": "https://package.openupm.com"
     },
-    "com.fofx.nessle": {
-      "version": "1.0.0",
-      "depth": 0,
-      "source": "registry",
-      "dependencies": {
-        "com.fofx.observething": "1.0.0"
-      },
-      "url": "https://registry.npmjs.org"
-    },
     "com.fofx.observething": {
       "version": "1.0.0",
       "depth": 0,

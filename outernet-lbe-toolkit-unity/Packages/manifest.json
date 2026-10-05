@@ -22,7 +22,6 @@
   "dependencies": {
     "com.cysharp.r3": "1.3.1",
     "com.cysharp.unitask": "2.5.10",
-    "com.fofx.nessle": "1.0.0",
     "com.fofx.observething": "1.0.0",
     "com.fofx.stateful": "1.0.0",
     "com.magicleap.unitysdk": "2.5.0",

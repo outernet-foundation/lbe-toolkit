@@ -4,7 +4,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-
+using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using FofX.Stateful;
 using ObserveThing;
 using SimpleJSON;
@@ -31,8 +32,6 @@ namespace Outernet.LBEToolkit.StateSynchronization
         public string topic { get; }
         public bool synchronized { get; private set; }
 
-        public event Action onInitialSynchronizationComplete;
-
         private IRealtimeClient _client;
 
         private MemoryStream _initSyncStream = new MemoryStream();
@@ -49,6 +48,7 @@ namespace Outernet.LBEToolkit.StateSynchronization
         private HashSet<HighFrequencyPrimitiveData> _syncedHighFrequencyPrimitives = new();
 
         private IDisposable _subscriptions;
+        private TaskCompletionSource<bool> _initialSyncCompletionSource = new TaskCompletionSource<bool>();
 
         private class HighFrequencyPrimitiveData
         {
@@ -68,7 +68,6 @@ namespace Outernet.LBEToolkit.StateSynchronization
 
             _client = client;
             _client.onEventReceived += HandleEventReceived;
-            _client.onJoinedRoom += HandleJoinedRoom;
             _client.onHostChanged += HandleHostChanged;
             _client.onPlayerEnteredRoom += HandlePlayerJoined;
             _client.onPlayerLeftRoom += HandlePlayerLeft;
@@ -86,9 +85,6 @@ namespace Outernet.LBEToolkit.StateSynchronization
 
             _incrementalSyncStream.WriteByte(INCREMENTAL_SYNC_EVENT);
             _highFrequencySyncStream.WriteByte(HIGH_FREQUENCY_SYNC_EVENT);
-
-            if (_client.connected)
-                HandleJoinedRoom();
         }
 
         private void HandlePlayerJoined(int playerId)
@@ -111,17 +107,6 @@ namespace Outernet.LBEToolkit.StateSynchronization
         {
             if (_client.playerId == hostId && _client.connected)
                 SendInitialSyncToPendingPlayers(_client.players.Except(_synchronizedPlayers).Where(x => x != _client.playerId).ToArray());
-        }
-
-        private void HandleJoinedRoom()
-        {
-            if (_client.playerId == _client.hostId)
-            {
-                synchronized = true;
-                onInitialSynchronizationComplete?.Invoke();
-
-                SendInitialSyncToPendingPlayers(_client.players.Except(_synchronizedPlayers).Where(x => x != _client.playerId).ToArray());
-            }
         }
 
         private void HandleSceneChanged(StateOperation op)
@@ -240,7 +225,6 @@ namespace Outernet.LBEToolkit.StateSynchronization
                 _client.SendEvent(synchronizedMessage, true, SyncTarget.Others, topic);
 
                 synchronized = true;
-                onInitialSynchronizationComplete?.Invoke();
             }
             else if (eventCode == INCREMENTAL_SYNC_EVENT)
             {
@@ -275,8 +259,6 @@ namespace Outernet.LBEToolkit.StateSynchronization
                 throw new Exception($"Unhandled event code {eventCode}");
             }
         }
-
-
 
         private void AddHighFrequencyPrimitiveInternal(int ownerId, uint primitiveId, string path, byte syncRate, bool isLocal, bool sendEvent)
         {
@@ -380,6 +362,8 @@ namespace Outernet.LBEToolkit.StateSynchronization
         private void ApplyInitialSync(T state, JSONNode json)
         {
             state.context.ExecuteBatchOperation(() => state.FromJSON(json));
+            synchronized = true;
+            _initialSyncCompletionSource?.TrySetResult(true);
         }
 
         private void ApplyIncrementalSync(T state, PathIDCache<T> pathIDCache, byte[] data, int index = -1, int length = -1)
@@ -491,6 +475,22 @@ namespace Outernet.LBEToolkit.StateSynchronization
         private bool ShouldSync(IStateNode state)
             => state.attributes.All(x => x is not DoNotSync);
 
+        public async UniTask PerformInitialSync()
+        {
+            if (!_client.connected)
+                throw new Exception("Realtime client is not connected!");
+
+            if (_client.playerId == _client.hostId)
+            {
+                synchronized = true;
+                SendInitialSyncToPendingPlayers(_client.players.Except(_synchronizedPlayers).Where(x => x != _client.playerId).ToArray());
+
+                _initialSyncCompletionSource.TrySetResult(true);
+            }
+
+            await _initialSyncCompletionSource.Task;
+        }
+
         public void SendHighFrequencySync()
         {
             using (var writer = new BinaryWriter(_highFrequencySyncStream, Encoding.UTF8, true))
@@ -566,6 +566,8 @@ namespace Outernet.LBEToolkit.StateSynchronization
         {
             synchronized = false;
             _subscriptions?.Dispose();
+
+            _initialSyncCompletionSource?.TrySetCanceled();
 
             foreach (var highFrequencyPrimitive in _highFrequencyPrimitives.Values)
                 highFrequencyPrimitive.subscription.Dispose();

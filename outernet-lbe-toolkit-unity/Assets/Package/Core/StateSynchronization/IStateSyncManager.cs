@@ -1,4 +1,5 @@
 using System;
+using Cysharp.Threading.Tasks;
 
 namespace Outernet.LBEToolkit.StateSynchronization
 {
@@ -7,6 +8,6 @@ namespace Outernet.LBEToolkit.StateSynchronization
         bool synchronized { get; }
         string topic { get; }
 
-        event Action onInitialSynchronizationComplete;
+        UniTask PerformInitialSync();
     }
 }

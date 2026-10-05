@@ -5,38 +5,48 @@ using Placeframe.Core;
 using Outernet.LBEToolkit.Localization;
 using Outernet.LBEToolkit.StateSynchronization;
 using System.Linq;
+using Outernet.LBEToolkit.Authorization;
+using System.Threading.Tasks;
 
 namespace Outernet.LBEToolkit
 {
     public enum ConnectionStatus
     {
         Disconnected,
+        Authorizing,
+        Authorized,
+        InitializingVps,
+        VpsInitialized,
         Connecting,
         Connected,
         Synchronized,
         Disconnecting
     }
 
-    public class LBESession
+    public class LBESession : IDisposable
     {
         public string apiUrl { get; }
+        public IAuthorizationProvider authorizationProvider { get; }
         public ICameraProvider cameraProvider { get; }
         public IRealtimeClient realtimeClient { get; }
         public ILocalizationMapProvider localizationMapProvider { get; }
         public IStateSyncManager stateSynchronizationManager { get; }
+        public float localizationInterval { get; }
 
         public ConnectionStatus connectionStatus { get; private set; } = ConnectionStatus.Disconnected;
         public event Action<ConnectionStatus> onConnectionStatusChanged;
 
         private bool _initialized;
 
-        public LBESession(string apiUrl, ICameraProvider cameraProvider, IRealtimeClient realtimeClient, ILocalizationMapProvider localizationMapProvider, IStateSyncManager stateSynchronizationManager)
+        public LBESession(string apiUrl, IAuthorizationProvider authorizationProvider, ICameraProvider cameraProvider, IRealtimeClient realtimeClient, ILocalizationMapProvider localizationMapProvider, IStateSyncManager stateSynchronizationManager, float localizationInterval = 1f)
         {
             this.apiUrl = apiUrl;
+            this.authorizationProvider = authorizationProvider;
             this.cameraProvider = cameraProvider;
             this.realtimeClient = realtimeClient;
             this.localizationMapProvider = localizationMapProvider;
             this.stateSynchronizationManager = stateSynchronizationManager;
+            this.localizationInterval = localizationInterval;
         }
 
         private void SetConnectionStatus(ConnectionStatus connectionStatus)
@@ -48,13 +58,23 @@ namespace Outernet.LBEToolkit
             onConnectionStatusChanged.Invoke(connectionStatus);
         }
 
-        public void InitializeVpsAndStartLocalizing(float localizationInterval = 1f, HttpMessageHandler httpMessageHandler = default)
+        public async UniTask InitializeVpsAndStartLocalizing()
         {
             if (_initialized)
                 throw new Exception("Initialize should only be called once");
 
+            _initialized = true;
+
+            SetConnectionStatus(ConnectionStatus.Authorizing);
+
+            var httpMessageHandler = await authorizationProvider.Authorize();
+
+            SetConnectionStatus(ConnectionStatus.Authorized);
+
             if (!VisualPositioningSystem.Localizing)
             {
+                SetConnectionStatus(ConnectionStatus.InitializingVps);
+
                 VisualPositioningSystem.Initialize(apiUrl, cameraProvider, httpMessageHandler: httpMessageHandler);
                 VisualPositioningSystem.StartLocalizing(localizationInterval);
             }
@@ -64,7 +84,7 @@ namespace Outernet.LBEToolkit
             localizationMapProvider.onMapAdded += VisualPositioningSystem.AddLocalizationMap;
             localizationMapProvider.onMapRemoved += VisualPositioningSystem.RemoveLocalizationMap;
 
-            _initialized = true;
+            SetConnectionStatus(ConnectionStatus.VpsInitialized);
         }
 
         public async UniTask ConnectToRoom(string roomName)
@@ -78,7 +98,7 @@ namespace Outernet.LBEToolkit
 
             SetConnectionStatus(ConnectionStatus.Connected);
 
-            await UniTask.WaitUntil(() => stateSynchronizationManager.synchronized);
+            await stateSynchronizationManager.PerformInitialSync();
 
             SetConnectionStatus(ConnectionStatus.Synchronized);
         }
@@ -95,71 +115,13 @@ namespace Outernet.LBEToolkit
             SetConnectionStatus(ConnectionStatus.Disconnected);
         }
 
-        // protected virtual void AddSerializers()
-        // {
-        //     JSONSerialization.AddSerializer(
-        //         new SerializationPair<double2>(
-        //             JSONSerializers.ToDouble2,
-        //             JSONSerializers.ToJSON
-        //         )
-        //     );
+        public void Dispose()
+        {
+            if (VisualPositioningSystem.Localizing)
+                VisualPositioningSystem.StopLocalizing();
 
-        //     JSONSerialization.AddSerializer(
-        //         new SerializationPair<double3>(
-        //             JSONSerializers.ToDouble3,
-        //             JSONSerializers.ToJSON
-        //         )
-        //     );
-
-        //     JSONSerialization.AddSerializer(
-        //         new SerializationPair<Vector2>(
-        //             JSONSerializers.ToVector2,
-        //             JSONSerializers.ToJSON
-        //         )
-        //     );
-
-        //     JSONSerialization.AddSerializer(
-        //         new SerializationPair<Vector3>(
-        //             JSONSerializers.ToVector3,
-        //             JSONSerializers.ToJSON
-        //         )
-        //     );
-
-        //     JSONSerialization.AddSerializer(
-        //         new SerializationPair<Vector4>(
-        //             JSONSerializers.ToVector4,
-        //             JSONSerializers.ToJSON
-        //         )
-        //     );
-
-        //     JSONSerialization.AddSerializer(
-        //         new SerializationPair<Quaternion>(
-        //             JSONSerializers.ToQuaternion,
-        //             JSONSerializers.ToJSON
-        //         )
-        //     );
-
-
-        //     JSONSerialization.AddSerializer(
-        //         new SerializationPair<Color>(
-        //             JSONSerializers.ToColor,
-        //             JSONSerializers.ToJSON
-        //         )
-        //     );
-
-        //     JSONSerialization.AddSerializer(
-        //         new SerializationPair<DateTime>(
-        //             json => DateTime.Parse(json.Value),
-        //             value => value.ToUniversalTime().ToString("O")
-        //         )
-        //     );
-
-        //     JSONSerialization.AddSerializer(
-        //         new SerializationPair<quaternion>(
-        //             x => JSONSerializers.ToQuaternion(x),
-        //             x => JSONSerializers.ToJSON((Quaternion)x)
-        //         )
-        //     );
-        // }
+            localizationMapProvider.onMapAdded -= VisualPositioningSystem.AddLocalizationMap;
+            localizationMapProvider.onMapRemoved -= VisualPositioningSystem.RemoveLocalizationMap;
+        }
     }
 }

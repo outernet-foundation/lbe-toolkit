@@ -8,35 +8,25 @@ namespace Outernet.LBEToolkit.Authorization
         public override bool authorized => _authorized;
         public override HttpMessageHandler httpMessageHandler => _httpMessageHandler;
 
-        public bool loginAutomatically;
-
-        [ToggleGroup(nameof(loginAutomatically))]
         public string tokenUrl;
-
-        [ToggleGroup(nameof(loginAutomatically))]
         public string clientId;
-
-        [ToggleGroup(nameof(loginAutomatically))]
         public string username;
-
-        [ToggleGroup(nameof(loginAutomatically))]
         public string password;
 
         private bool _authorized;
         private HttpMessageHandler _httpMessageHandler;
 
-        private void Awake()
+        public async override UniTask<HttpMessageHandler> Authorize()
         {
-            if (loginAutomatically)
-                Login(tokenUrl, clientId, username, password).Forget();
-        }
+            if (_httpMessageHandler != null)
+                return _httpMessageHandler;
 
-        public async UniTask Login(string tokenUrl, string clientId, string username, string password)
-        {
             var httpHandler = new TokenServerHttpHandler();
             await httpHandler.Login(tokenUrl, clientId, username, password);
             _httpMessageHandler = httpHandler;
             _authorized = true;
+
+            return httpHandler;
         }
     }
 }

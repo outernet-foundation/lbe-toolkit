@@ -1,4 +1,5 @@
 using System.Net.Http;
+using Cysharp.Threading.Tasks;
 
 namespace Outernet.LBEToolkit.Authorization
 {
@@ -15,5 +16,8 @@ namespace Outernet.LBEToolkit.Authorization
         {
             _httpMessageHandler = new AnonymousIdentityHttpHandler(identity);
         }
+
+        public override UniTask<HttpMessageHandler> Authorize()
+            => new UniTask<HttpMessageHandler>(_httpMessageHandler);
     }
 }
