@@ -99,7 +99,7 @@
   <Project Path="UnityEditor.UI.Analytics.csproj" />
   <Project Path="UniTask.TextMeshPro.csproj" />
   <Project Path="Unity.XR.ARCore.Editor.csproj" />
-  <Project Path="com.outernet.lbetoolkit.statesynchronization.csproj" />
+  <Project Path="org.outernet.lbetoolkit.statesynchronization.csproj" />
   <Project Path="Unity.InputSystem.TestFramework.csproj" />
   <Project Path="Unity.XR.Interaction.Toolkit.Samples.DeviceSimulator.csproj" />
   <Project Path="UnityEditor.XR.LegacyInputHelpers.csproj" />
@@ -133,7 +133,7 @@
   <Project Path="Unity.RenderPipelines.Core.Runtime.Shared.csproj" />
   <Project Path="Unity.Toolchain.Linux-x86_64.csproj" />
   <Project Path="Unity.Sysroot.Linux_x86_64.csproj" />
-  <Project Path="com.outernet.lbetoolkit.livekit.csproj" />
+  <Project Path="org.outernet.lbetoolkit.livekit.csproj" />
   <Project Path="Unity.XR.ARAnalytics.Editor.csproj" />
   <Project Path="com.outernet.lbetoolkit.statesynchronization.tests.csproj" />
   <Project Path="Unity.XR.ARFoundation.InternalUtils.Editor.csproj" />

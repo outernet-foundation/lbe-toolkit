@@ -6,7 +6,7 @@
         "UnityEditor.TestRunner",
         "Stateful",
         "ObserveThing",
-        "com.outernet.lbetoolkit.statesynchronization"
+        "org.outernet.lbetoolkit.statesynchronization"
     ],
     "includePlatforms": [
         "Editor"
