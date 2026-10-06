@@ -7,12 +7,28 @@ using Outernet.LBEToolkit.Authorization;
 using UnityEngine;
 using Placeframe.Core;
 using Cysharp.Threading.Tasks;
+using System.Linq;
 
 namespace Outernet.LBEToolkit.Example
 {
     public class ExampleState : StateObject
     {
+        public StateValue<bool> inRoomAndSynchronized { get; private set; }
+        public SynchronizedState synchronizedState { get; private set; }
+    }
 
+    public class SynchronizedState : StateObject
+    {
+        public StateDictionary<int, PlayerData> players { get; private set; }
+    }
+
+    public class PlayerData : StateObject
+    {
+        public int playerId { get; private set; }
+        public StateValue<string> name { get; private set; }
+        public StateValue<Color> color { get; private set; }
+        public StateValue<Vector3> position { get; private set; }
+        public StateValue<Quaternion> rotation { get; private set; }
     }
 
     public class ExampleLBE : MonoBehaviour
@@ -26,8 +42,7 @@ namespace Outernet.LBEToolkit.Example
         public RealtimeClientComponent realtimeClient;
         public float localizationInterval;
 
-        private PeerToPeerStateSyncManager<ExampleState> _stateSyncManager;
-        private LBESession _lbeSession;
+        private PeerToPeerStateSyncManager<SynchronizedState> _stateSyncManager;
 
         private void Awake()
         {
@@ -35,20 +50,18 @@ namespace Outernet.LBEToolkit.Example
 
             state = new ExampleState();
             state.Initialize(Settings.DefaultObservationContext, new DefaultLogger());
-
-            _stateSyncManager = new PeerToPeerStateSyncManager<ExampleState>(state, realtimeClient, "Example");
-            _lbeSession = new LBESession(apiUrl, authorizationProvider, cameraProvider, realtimeClient, localizationMapProvider, _stateSyncManager, 1f);
-
-            InitAndJoinRoom().Forget();
         }
 
-        private async UniTask InitAndJoinRoom()
+        private void LateUpdate()
         {
-            await _lbeSession.InitializeVpsAndStartLocalizing();
-            await _lbeSession.ConnectToRoom("test room");
+            if (_stateSyncManager != null)
+            {
+                _stateSyncManager.SendHighFrequencySync();
+                _stateSyncManager.SendIncrementalSync();
+            }
         }
 
-        protected virtual void AddSerializers()
+        private void AddSerializers()
         {
             JSONSerialization.AddSerializer(
                 JSONSerializers.ToDouble2,
@@ -80,7 +93,6 @@ namespace Outernet.LBEToolkit.Example
                 JSONSerializers.ToJSON
             );
 
-
             JSONSerialization.AddSerializer(
                 JSONSerializers.ToColor,
                 JSONSerializers.ToJSON
@@ -95,6 +107,37 @@ namespace Outernet.LBEToolkit.Example
                 x => JSONSerializers.ToQuaternion(x),
                 x => JSONSerializers.ToJSON(x)
             );
+        }
+
+        public async UniTask InitializeVPS()
+        {
+            if (VisualPositioningSystem.Initialized)
+                throw new Exception("VisualPositioningSystem has already been initialized!");
+
+            if (!authorizationProvider.authorized)
+                await authorizationProvider.Authorize();
+
+            VisualPositioningSystem.Initialize(apiUrl, cameraProvider, httpMessageHandler: authorizationProvider.httpMessageHandler);
+            VisualPositioningSystem.StartLocalizing(localizationInterval);
+            VisualPositioningSystem.SetLocalizationMaps(localizationMapProvider.maps.ToArray());
+
+            localizationMapProvider.onMapAdded += VisualPositioningSystem.AddLocalizationMap;
+            localizationMapProvider.onMapRemoved += VisualPositioningSystem.RemoveLocalizationMap;
+        }
+
+        public async UniTask ConnectToRoom(string room)
+        {
+            await realtimeClient.Connect(room);
+            _stateSyncManager = new PeerToPeerStateSyncManager<SynchronizedState>(state.synchronizedState, realtimeClient, "example");
+            await _stateSyncManager.PerformInitialSync();
+            state.inRoomAndSynchronized.value = true;
+        }
+
+        public async UniTask LeaveRoom()
+        {
+            state.inRoomAndSynchronized.value = false;
+            _stateSyncManager.Dispose();
+            await realtimeClient.Disconnect();
         }
     }
 }

@@ -37,7 +37,7 @@
   <Project Path="PPv2URPConverters.csproj" />
   <Project Path="Unity.XR.CoreUtils.csproj" />
   <Project Path="Unity.XR.Simulation.Editor.csproj" />
-  <Project Path="com.outernet.lbetoolkit.csproj" />
+  <Project Path="org.outernet.lbetoolkit.csproj" />
   <Project Path="UniTask.csproj" />
   <Project Path="Unity.Searcher.Editor.csproj" />
   <Project Path="Unity.XR.Hands.csproj" />
@@ -110,8 +110,8 @@
   <Project Path="Unity.XR.ARFoundation.InternalUtils.csproj" />
   <Project Path="Unity.XR.ARFoundation.Editor.csproj" />
   <Project Path="Unity.EditorCoroutines.Editor.csproj" />
-  <Project Path="Unity.XR.Hands.Samples.VisualizerSample.csproj" />
   <Project Path="Photon.Chat.csproj" />
+  <Project Path="Unity.XR.Hands.Samples.VisualizerSample.csproj" />
   <Project Path="Unity.XR.Interaction.Toolkit.Samples.StarterAssets.Editor.csproj" />
   <Project Path="Unity.XR.OpenXR.Features.MetaQuestSupport.csproj" />
   <Project Path="Unity.CollabProxy.Editor.csproj" />

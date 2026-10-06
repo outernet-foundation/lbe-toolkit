@@ -1,5 +1,6 @@
 using Cysharp.Threading.Tasks;
 using System.Net.Http;
+using Placeframe.Auth;
 
 namespace Outernet.LBEToolkit.Authorization
 {
@@ -16,17 +17,15 @@ namespace Outernet.LBEToolkit.Authorization
         private bool _authorized;
         private HttpMessageHandler _httpMessageHandler;
 
-        public async override UniTask<HttpMessageHandler> Authorize()
+        public async override UniTask Authorize()
         {
             if (_httpMessageHandler != null)
-                return _httpMessageHandler;
+                return;
 
             var httpHandler = new TokenServerHttpHandler();
             await httpHandler.Login(tokenUrl, clientId, username, password);
             _httpMessageHandler = httpHandler;
             _authorized = true;
-
-            return httpHandler;
         }
     }
 }

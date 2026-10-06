@@ -9,7 +9,7 @@ namespace Outernet.LBEToolkit.Authorization
         bool authorized { get; }
         HttpMessageHandler httpMessageHandler { get; }
 
-        UniTask<HttpMessageHandler> Authorize();
+        UniTask Authorize();
     }
 
     public abstract class AuthorizationProvider : MonoBehaviour, IAuthorizationProvider
@@ -17,6 +17,6 @@ namespace Outernet.LBEToolkit.Authorization
         public abstract bool authorized { get; }
         public abstract HttpMessageHandler httpMessageHandler { get; }
 
-        public abstract UniTask<HttpMessageHandler> Authorize();
+        public abstract UniTask Authorize();
     }
 }

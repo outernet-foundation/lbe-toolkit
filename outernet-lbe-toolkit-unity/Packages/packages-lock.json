@@ -17,18 +17,18 @@
       "url": "https://package.openupm.com"
     },
     "com.fofx.observething": {
-      "version": "1.0.0",
+      "version": "1.1.0",
       "depth": 0,
       "source": "registry",
       "dependencies": {},
       "url": "https://registry.npmjs.org"
     },
     "com.fofx.stateful": {
-      "version": "1.0.0",
+      "version": "1.1.0",
       "depth": 0,
       "source": "registry",
       "dependencies": {
-        "com.fofx.observething": "1.0.0"
+        "com.fofx.observething": "1.1.0"
       },
       "url": "https://registry.npmjs.org"
     },

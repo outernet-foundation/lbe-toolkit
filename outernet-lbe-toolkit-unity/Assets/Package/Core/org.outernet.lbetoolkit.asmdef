@@ -1,10 +1,12 @@
 {
-    "name": "com.outernet.lbetoolkit.statesynchronization",
+    "name": "org.outernet.lbetoolkit",
     "rootNamespace": "",
     "references": [
         "GUID:dc45d6bbcc15bf245b038035793d5e2e",
-        "GUID:251962950e671c049bdb5ecb16442b37",
         "GUID:f51ebe6a0ceec4240a699833d6309b23",
+        "GUID:b76c1d084090fa34d9ef08917c2a0845",
+        "GUID:5682cb212502e9fe48330cbd68bb85e3",
+        "GUID:eaea37e9ecc8d6541969256c43bbf381",
         "GUID:d8b63aba1907145bea998dd612889d6b"
     ],
     "includePlatforms": [],
