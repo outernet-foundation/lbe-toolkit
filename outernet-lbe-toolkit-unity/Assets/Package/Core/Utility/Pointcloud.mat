@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Pointcloud
-  m_Shader: {fileID: 4800000, guid: d987815e67404f94da76015d8a8e7ed6, type: 3}
+  m_Shader: {fileID: 4800000, guid: 971b69a1ca3bd494b9b941f270e871a9, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
