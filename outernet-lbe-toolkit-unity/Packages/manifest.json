@@ -3,20 +3,12 @@
     {
       "name": "npmjs",
       "url": "https://registry.npmjs.org",
-      "scopes": [
-        "com.fofx",
-        "com.magicleap",
-        "org.outernet"
-      ]
+      "scopes": ["com.fofx", "com.magicleap", "org.outernet"]
     },
     {
       "name": "package.openupm.com",
       "url": "https://package.openupm.com",
-      "scopes": [
-        "com.cysharp",
-        "io.livekit",
-        "org.nuget"
-      ]
+      "scopes": ["com.cysharp", "io.livekit", "org.nuget"]
     }
   ],
   "dependencies": {
@@ -48,11 +40,9 @@
     "com.unity.xr.openxr": "1.16.1",
     "io.livekit.livekit-sdk": "2.0.0",
     "org.nuget.r3": "1.3.1",
-    "org.outernet.placeframe": "https://github.com/outernet-foundation/placeframe.git?path=packages/unity/Placeframe/Assets/Package/Core#feature/dependency-cleanup-cont",
-    "org.outernet.placeframe.apiclient": "https://github.com/outernet-foundation/placeframe.git?path=packages/generated/csharp/api-client/src/PlaceframeApiClient#feature/dependency-cleanup-cont",
-    "org.outernet.placeframe.arfoundation": "https://github.com/outernet-foundation/placeframe.git?path=packages/unity/Placeframe/Assets/Package/ARFoundation#feature/dependency-cleanup-cont",
-    "org.outernet.placeframe.auth": "https://github.com/outernet-foundation/placeframe.git?path=packages/unity/Placeframe/Assets/Package/Auth#feature/dependency-cleanup-cont",
-    "org.outernet.placeframe.magicleap": "https://github.com/outernet-foundation/placeframe.git?path=packages/unity/Placeframe/Assets/Package/MagicLeap#feature/dependency-cleanup-cont",
+    "org.outernet.placeframe.arfoundation": "2.0.0-dev.1327",
+    "org.outernet.placeframe.auth": "2.0.0-dev.1327",
+    "org.outernet.placeframe.magicleap": "2.0.0-dev.1327",
     "com.unity.modules.accessibility": "1.0.0",
     "com.unity.modules.ai": "1.0.0",
     "com.unity.modules.androidjni": "1.0.0",
