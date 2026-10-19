@@ -17,20 +17,20 @@
       "url": "https://package.openupm.com"
     },
     "com.fofx.observething": {
-      "version": "1.1.0",
+      "version": "https://github.com/fofx-games/ObserveThing.git?path=Assets/Package/Core#dev",
       "depth": 0,
-      "source": "registry",
+      "source": "git",
       "dependencies": {},
-      "url": "https://registry.npmjs.org"
+      "hash": "7ba0d97df3f01702b36addeb402723e16340eea0"
     },
     "com.fofx.stateful": {
-      "version": "1.1.0",
+      "version": "https://github.com/fofx-games/StatefulUnity.git?path=Assets/Package#dev",
       "depth": 0,
-      "source": "registry",
+      "source": "git",
       "dependencies": {
         "com.fofx.observething": "1.1.0"
       },
-      "url": "https://registry.npmjs.org"
+      "hash": "9894f8a37988fbdbb1c1e38978041b4836ad4c08"
     },
     "com.magicleap.unitysdk": {
       "version": "2.6.0",

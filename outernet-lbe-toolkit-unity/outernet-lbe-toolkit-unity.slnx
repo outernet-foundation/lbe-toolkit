@@ -30,7 +30,6 @@
   <Project Path="Unity.XR.Interaction.Toolkit.csproj" />
   <Project Path="Unity.XR.ARSubsystems.csproj" />
   <Project Path="Unity.VisualStudio.Editor.csproj" />
-  <Project Path="ObserveThing.csproj" />
   <Project Path="Unity.InputSystem.csproj" />
   <Project Path="Photon.Realtime.csproj" />
   <Project Path="Unity.XR.Interaction.Toolkit.Editor.csproj" />
@@ -59,6 +58,7 @@
   <Project Path="Unity.TextMeshPro.Editor.csproj" />
   <Project Path="Unity.Rendering.LightTransport.Runtime.csproj" />
   <Project Path="Unity.Burst.Editor.csproj" />
+  <Project Path="ObserveThing.csproj" />
   <Project Path="Unity.Mobile.AndroidLogcat.Editor.csproj" />
   <Project Path="Unity.Rider.Editor.csproj" />
   <Project Path="Unity.XR.ARFoundation.VisualScripting.csproj" />

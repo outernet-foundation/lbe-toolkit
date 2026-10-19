@@ -49,7 +49,7 @@ namespace Outernet.LBEToolkit.Example
             AddSerializers();
 
             state = new ExampleState();
-            state.Initialize(Settings.DefaultObservationContext, new DefaultLogger());
+            state.Initialize(ObservationDefaults.DefaultObservationContext, new DefaultLogger());
         }
 
         private void LateUpdate()

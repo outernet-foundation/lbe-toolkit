@@ -276,14 +276,14 @@ namespace Outernet.LBEToolkit.StateSynchronization
 
             _highFrequencyPrimitives.Add(id, highFrequencyPrimitiveData);
 
-            highFrequencyPrimitiveData.subscription = primitive.Subscribe(
+            highFrequencyPrimitiveData.subscription = primitive.Subscribe(new ValueObserver(
                 onNext: !isLocal ? null : _ =>
                 {
                     if (!_applyingRemoteChanges)
                         _dirtyHighFrequencyPrimitives.Add(highFrequencyPrimitiveData);
                 },
                 onDispose: () => RemoveHighFrequencyPrimitiveInternal(ownerId, primitiveId, false)
-            );
+            ));
 
             if (!sendEvent)
                 return;
