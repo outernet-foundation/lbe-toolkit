@@ -12,7 +12,7 @@
     }
   ],
   "dependencies": {
-    "com.cysharp.r3": "1.3.1",
+    "com.cysharp.r3": "1.2.9",
     "com.cysharp.unitask": "2.5.10",
     "com.fofx.observething": "1.1.0",
     "com.fofx.stateful": "1.1.0",
@@ -39,7 +39,7 @@
     "com.unity.xr.management": "4.5.3",
     "com.unity.xr.openxr": "1.16.1",
     "io.livekit.livekit-sdk": "2.0.0",
-    "org.nuget.r3": "1.3.1",
+    "org.nuget.r3": "1.2.9",
     "org.outernet.placeframe.arfoundation": "2.0.0-dev.1327",
     "org.outernet.placeframe.auth": "2.0.0-dev.1327",
     "org.outernet.placeframe.magicleap": "2.0.0-dev.1327",
