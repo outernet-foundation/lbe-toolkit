@@ -10,11 +10,11 @@
     "email": "epjecha@gmail.com"
   },
   "dependencies": {
-    "com.fofx.stateful": "1.0.0",
+    "com.fofx.stateful": "1.1.1-dev.94",
     "com.cysharp.unitask": "2.5.11",
-    "org.outernet.placeframe": "1.0.6-dev.35815669170",
-    "org.outernet.placeframe.auth": "1.0.6-dev.35815669170",
-    "org.outernet.placeframe.apiclient": "1.0.6-dev.35815669170",
+    "org.outernet.placeframe": "2.0.0-dev.1336",
+    "org.outernet.placeframe.auth": "2.0.0-dev.1336",
+    "org.outernet.placeframe.apiclient": "2.0.0-dev.1336",
     "com.unity.mathematics": "1.3.2"
   }
 }
