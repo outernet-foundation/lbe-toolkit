@@ -14,13 +14,16 @@ namespace Outernet.LBEToolkit.StateSynchronization
 
         public IEnumerable<int> players { get; private set; }
 
+#pragma warning disable CS0067
         public event Action<int> onHostChanged;
         public event Action<int> onPlayerEnteredRoom;
         public event Action<int> onPlayerLeftRoom;
         public event Action<string> onDisconnectedUnexpectedly;
-        public event Action<int, string, byte[]> onEventReceived;
         public event Action onJoinedRoom;
         public event Action onLeftRoom;
+#pragma warning restore CS0067
+
+        public event Action<int, string, byte[]> onEventReceived;
 
         public UniTask Connect(string roomID, CancellationToken cancellationToken = default)
         {
