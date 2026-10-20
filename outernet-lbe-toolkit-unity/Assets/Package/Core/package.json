@@ -9,6 +9,15 @@
     "name": "Elliot Pjecha",
     "email": "epjecha@gmail.com"
   },
+  "homepage": "https://github.com/outernet-foundation/lbe-toolkit#readme",
+  "bugs": {
+    "url": "https://github.com/outernet-foundation/lbe-toolkit/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/outernet-foundation/lbe-toolkit",
+    "directory": "outernet-lbe-toolkit-unity/Assets/Package/Core"
+  },
   "dependencies": {
     "com.fofx.stateful": "1.1.1-dev.94",
     "com.cysharp.unitask": "2.5.11",
