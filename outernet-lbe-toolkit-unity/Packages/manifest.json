@@ -20,7 +20,7 @@
     }
   ],
   "dependencies": {
-    "com.cysharp.unitask": "2.5.10",
+    "com.cysharp.unitask": "2.5.11",
     "com.fofx.nessle": "1.1.2-dev.140",
     "com.fofx.stateful": "1.1.1-dev.94",
     "com.magicleap.unitysdk": "2.5.0",

@@ -1,0 +1,16 @@
+packages:
+  lbetoolkit-core:
+    path: outernet-lbe-toolkit-unity/Assets/Package/Core
+    major_minor: "1.1"
+    registry: npm
+    identity: org.outernet.lbetoolkit
+  lbetoolkit-livekit:
+    path: outernet-lbe-toolkit-unity/Assets/Package/LiveKit
+    major_minor: "1.1"
+    registry: npm
+    identity: org.outernet.lbetoolkit.livekit
+  lbetoolkit-photon:
+    path: outernet-lbe-toolkit-unity/Assets/Package/Photon
+    major_minor: "1.1"
+    registry: npm
+    identity: org.outernet.lbetoolkit.photon
