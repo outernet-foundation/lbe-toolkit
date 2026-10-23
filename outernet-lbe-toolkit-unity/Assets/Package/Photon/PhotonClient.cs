@@ -25,14 +25,10 @@ namespace Outernet.LBEToolkit.StateSynchronization
 
         public override IEnumerable<int> players => _client.CurrentRoom.Players.Keys;
 
-        public string realtimeId;
         public bool selfHosted;
 
         [ToggleGroup(nameof(selfHosted))]
-        public string selfHostedIp;
-
-        [ToggleGroup(nameof(selfHosted))]
-        public ushort selfHostedPort;
+        public string realtimeId;
 
         private PhotonRealtimeClient _client;
         private Dictionary<SyncTarget, ReceiverGroup> _syncTargetToReceiverGroup = new Dictionary<SyncTarget, ReceiverGroup>()
@@ -137,19 +133,12 @@ namespace Outernet.LBEToolkit.StateSynchronization
 
         }
 
-        public override async UniTask Connect(string roomID, CancellationToken cancellationToken = default)
+        public override async UniTask Connect(string backendUrl, string roomID, CancellationToken cancellationToken = default)
         {
             if (connected)
                 return;
 
-            if (selfHosted)
-            {
-                await _client.ConnectUsingSettingsAsync(new AppSettings() { AppIdRealtime = realtimeId, Server = selfHostedIp, Port = selfHostedPort });
-            }
-            else
-            {
-                await _client.ConnectUsingSettingsAsync(new AppSettings() { AppIdRealtime = realtimeId });
-            }
+            await _client.ConnectUsingSettingsAsync(new AppSettings() { AppIdRealtime = realtimeId });
 
             cancellationToken.ThrowIfCancellationRequested();
 
