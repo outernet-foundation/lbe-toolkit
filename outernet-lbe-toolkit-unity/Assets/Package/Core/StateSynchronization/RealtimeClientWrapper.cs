@@ -26,9 +26,9 @@ namespace Outernet.LBEToolkit.StateSynchronization
 
         protected abstract IRealtimeClient GetInstance();
 
-        public override UniTask Connect(string roomID, CancellationToken cancellationToken = default)
+        public override UniTask Connect(string connectionString, string roomID, CancellationToken cancellationToken = default)
         {
-            return _instance.Connect(roomID, cancellationToken);
+            return _instance.Connect(connectionString, roomID, cancellationToken);
         }
 
         public override UniTask Disconnect()

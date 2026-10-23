@@ -18,8 +18,6 @@ namespace Outernet.LBEToolkit.StateSynchronization
 
         public override IEnumerable<int> players => _idToParticipant.Keys.Append(playerId);
 
-        public string endpointUrl;
-
         private bool _connected;
         private int _playerId;
         private int _hostId;
@@ -146,14 +144,14 @@ namespace Outernet.LBEToolkit.StateSynchronization
             return UniTask.CompletedTask;
         }
 
-        public override async UniTask Connect(string roomID, CancellationToken cancellationToken = default)
+        public override async UniTask Connect(string connectionString, string roomID, CancellationToken cancellationToken = default)
         {
             if (connected)
                 throw new Exception("Already connected");
 
             _connected = true;
 
-            var tokenProvider = new TokenSourceEndpoint(endpointUrl, null);
+            var tokenProvider = new TokenSourceEndpoint(connectionString, null);
             var fetchConnectionDetailsTask = tokenProvider.FetchConnectionDetails(new()
             {
                 RoomName = roomID,
