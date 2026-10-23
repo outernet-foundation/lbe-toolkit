@@ -36,6 +36,7 @@ namespace Outernet.LBEToolkit.Example
         public static ExampleState state { get; private set; }
 
         public string apiUrl;
+        public string backendUrl;
         public AuthorizationProvider authorizationProvider;
         public CameraProviderComponent cameraProvider;
         public LocalizationMapProviderComponent localizationMapProvider;
@@ -127,7 +128,7 @@ namespace Outernet.LBEToolkit.Example
 
         public async UniTask ConnectToRoom(string room)
         {
-            await realtimeClient.Connect(room);
+            await realtimeClient.Connect(backendUrl, room, destroyCancellationToken);
             _stateSyncManager = new PeerToPeerStateSyncManager<SynchronizedState>(state.synchronizedState, realtimeClient, "example");
             await _stateSyncManager.PerformInitialSync();
             state.inRoomAndSynchronized.value = true;
