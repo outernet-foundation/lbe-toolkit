@@ -13,10 +13,17 @@ permissions:
   contents: read
 
 jobs:
+  mirror-images:
+    permissions:
+      contents: read
+      packages: write
+    uses: outernet-foundation/github-actions-toolkit/.github/workflows/mirror.yml@c6221cf68594e2d6bf4445da02beea0b8ee58440
+
   preflight:
+    needs: [mirror-images]
+    permissions:
+      contents: read
     uses: outernet-foundation/github-actions-toolkit/.github/workflows/preflight.yml@c6221cf68594e2d6bf4445da02beea0b8ee58440
-    with:
-      consumer-script: false
 
   compile-check-unity:
     needs: [preflight]
@@ -29,8 +36,15 @@ jobs:
       unity-password: ${{ secrets.UNITY_PASSWORD }}
       unity-serial: ${{ secrets.UNITY_SERIAL }}
 
+  build-docker:
+    needs: [preflight]
+    permissions:
+      contents: read
+      packages: write
+    uses: outernet-foundation/github-actions-toolkit/.github/workflows/build-docker.yml@c6221cf68594e2d6bf4445da02beea0b8ee58440
+
   release-pr-builds:
-    needs: [compile-check-unity]
+    needs: [compile-check-unity, build-docker]
     permissions:
       contents: write
       packages: read
