@@ -1,0 +1,20 @@
+# x-base-images is the single declaration home for every third-party image this
+# repo consumes — Dockerfile bases AND runtime images pulled by compose (the
+# `*_IMAGE` keys feed compose image holes via images.lock).
+x-base-images:
+  UV_BASE_IMAGE: "ghcr.io/astral-sh/uv:python3.13-bookworm-slim"
+
+x-base-args: &base-args
+  UV_BASE_IMAGE: "${UV_BASE_IMAGE:-}"
+
+x-registry-cache: ghcr.io/outernet-foundation/lbe-toolkit/build-cache
+
+services:
+  livekit-token:
+    build:
+      context: .
+      dockerfile: workloads/livekit-token/Dockerfile
+      args: *base-args
+      tags:
+        - "ghcr.io/outernet-foundation/lbe-toolkit/livekit-token:latest"
+        - "ghcr.io/outernet-foundation/lbe-toolkit/livekit-token:${LIVEKIT_TOKEN_SHA}"
