@@ -133,24 +133,12 @@ namespace Outernet.LBEToolkit.StateSynchronization
 
         }
 
-        public override async UniTask Connect(string connectionString, string roomID, CancellationToken cancellationToken = default)
+        public override async UniTask Connect(string backendUrl, string roomID, CancellationToken cancellationToken = default)
         {
             if (connected)
                 return;
 
-            if (selfHosted)
-            {
-                string[] endpoint = connectionString.Split(':');
-                var settings = new AppSettings() { AppIdRealtime = realtimeId, Server = endpoint[0] };
-                if (endpoint.Length > 1)
-                    settings.Port = ushort.Parse(endpoint[1]);
-
-                await _client.ConnectUsingSettingsAsync(settings);
-            }
-            else
-            {
-                await _client.ConnectUsingSettingsAsync(new AppSettings() { AppIdRealtime = connectionString });
-            }
+            await _client.ConnectUsingSettingsAsync(new AppSettings() { AppIdRealtime = realtimeId });
 
             cancellationToken.ThrowIfCancellationRequested();
 

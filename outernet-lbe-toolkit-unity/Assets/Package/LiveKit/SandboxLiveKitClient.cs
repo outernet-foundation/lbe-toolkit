@@ -11,6 +11,8 @@ namespace Outernet.LBEToolkit.StateSynchronization
 {
     public class SandboxLiveKitClient : RealtimeClientComponent
     {
+        public string sandboxId { get; set; }
+
         public override bool connected => _connected;
         public override int playerId => _playerId;
         public override int hostId => _hostId;
@@ -180,7 +182,7 @@ namespace Outernet.LBEToolkit.StateSynchronization
             return UniTask.CompletedTask;
         }
 
-        public override async UniTask Connect(string connectionString, string roomID, CancellationToken cancellationToken = default)
+        public override async UniTask Connect(string backendUrl, string roomID, CancellationToken cancellationToken = default)
         {
             if (connected)
                 throw new Exception("Already connected");
@@ -188,7 +190,7 @@ namespace Outernet.LBEToolkit.StateSynchronization
             _connected = true;
 
             var identity = Guid.NewGuid();
-            var tokenProvider = new TokenSourceSandbox(connectionString);
+            var tokenProvider = new TokenSourceSandbox(sandboxId);
             var fetchConnectionDetailsTask = tokenProvider.FetchConnectionDetails(new()
             {
                 RoomName = roomID,

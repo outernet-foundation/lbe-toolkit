@@ -30,7 +30,7 @@ namespace Outernet.LBEToolkit.StateSynchronization
 
         event Action<int, string, byte[]> onEventReceived;
 
-        UniTask Connect(string connectionString, string roomID, CancellationToken cancellationToken = default);
+        UniTask Connect(string backendUrl, string roomID, CancellationToken cancellationToken = default);
         UniTask Disconnect();
 
         void SendEvent(byte[] data, bool reliable, int[] targets, string topic = null);

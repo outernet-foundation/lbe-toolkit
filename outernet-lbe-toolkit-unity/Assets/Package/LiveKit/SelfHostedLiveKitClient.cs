@@ -12,6 +12,8 @@ namespace Outernet.LBEToolkit.StateSynchronization
 {
     public class SelfHostedLiveKitClient : RealtimeClientComponent
     {
+        public const string MintRoute = "/livekit-token/connection-details";
+
         public override bool connected => _connected;
         public override int playerId => _playerId;
         public override int hostId => _hostId;
@@ -144,14 +146,14 @@ namespace Outernet.LBEToolkit.StateSynchronization
             return UniTask.CompletedTask;
         }
 
-        public override async UniTask Connect(string connectionString, string roomID, CancellationToken cancellationToken = default)
+        public override async UniTask Connect(string backendUrl, string roomID, CancellationToken cancellationToken = default)
         {
             if (connected)
                 throw new Exception("Already connected");
 
             _connected = true;
 
-            var tokenProvider = new TokenSourceEndpoint(connectionString, null);
+            var tokenProvider = new TokenSourceEndpoint(backendUrl.TrimEnd('/') + MintRoute, null);
             var fetchConnectionDetailsTask = tokenProvider.FetchConnectionDetails(new()
             {
                 RoomName = roomID,

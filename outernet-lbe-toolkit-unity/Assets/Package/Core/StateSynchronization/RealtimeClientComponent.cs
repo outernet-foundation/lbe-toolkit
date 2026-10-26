@@ -21,7 +21,7 @@ namespace Outernet.LBEToolkit.StateSynchronization
         public event Action onJoinedRoom;
         public event Action onLeftRoom;
 
-        public abstract UniTask Connect(string connectionString, string roomID, CancellationToken cancellationToken = default);
+        public abstract UniTask Connect(string backendUrl, string roomID, CancellationToken cancellationToken = default);
         public abstract UniTask Disconnect();
         public abstract void SendEvent(byte[] data, bool reliable, int[] targets, string topic = null);
         public abstract void SendEvent(byte[] data, bool reliable, SyncTarget target, string topic = null);
