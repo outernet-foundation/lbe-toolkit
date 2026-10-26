@@ -1,0 +1,22 @@
+{
+    servers :8443 {
+        protocols h1 h2c
+    }
+}
+
+http://:8443 {
+    # handle (not handle_path) preserves the /livekit-token prefix — the
+    # sidecar mounts its router at that path.
+    handle /livekit-token/* {
+        reverse_proxy livekit-token:8000
+    }
+
+    handle {
+        reverse_proxy gateway:8443 {
+            transport http {
+                versions h2c 2
+            }
+            flush_interval -1
+        }
+    }
+}

@@ -1,1 +1,3 @@
+CADDY_IMAGE=ghcr.io/outernet-foundation/mirror/docker.io/library/caddy:2.8.4-alpine@sha256:af32e97399febea808609119bb21544d0265c58a02836576e32a2d082c262c17
+LIVEKIT_SERVER_IMAGE=ghcr.io/outernet-foundation/mirror/docker.io/livekit/livekit-server:v1.12.0@sha256:b1281e66e35e8f9749ffbcf0fe6ab4d40d1438aa00f36c2ea7e6975e5e261e2e
 UV_BASE_IMAGE=ghcr.io/outernet-foundation/mirror/ghcr.io/astral-sh/uv:python3.13-bookworm-slim@sha256:531f855bda2c73cd6ef67d56b733b357cea384185b3022bd09f05e002cd144ca

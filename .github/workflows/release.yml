@@ -18,7 +18,7 @@ jobs:
       contents: write
       id-token: write
     steps:
-      - uses: outernet-foundation/github-actions-toolkit/.github/actions/release@c6221cf68594e2d6bf4445da02beea0b8ee58440
+      - uses: outernet-foundation/github-actions-toolkit/.github/actions/release@9789edea2bb2201a34caf74e9a4815b338b7f9a0
         with:
           channel: dev
 
@@ -29,6 +29,6 @@ jobs:
       contents: write
       id-token: write
     steps:
-      - uses: outernet-foundation/github-actions-toolkit/.github/actions/release@c6221cf68594e2d6bf4445da02beea0b8ee58440
+      - uses: outernet-foundation/github-actions-toolkit/.github/actions/release@9789edea2bb2201a34caf74e9a4815b338b7f9a0
         with:
           channel: stable
