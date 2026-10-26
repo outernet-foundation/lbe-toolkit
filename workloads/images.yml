@@ -3,6 +3,8 @@
 # `*_IMAGE` keys feed compose image holes via images.lock).
 x-base-images:
   UV_BASE_IMAGE: "ghcr.io/astral-sh/uv:python3.13-bookworm-slim"
+  LIVEKIT_SERVER_IMAGE: "docker.io/livekit/livekit-server:v1.12.0"
+  CADDY_IMAGE: "docker.io/library/caddy:2.8.4-alpine"
 
 x-base-args: &base-args
   UV_BASE_IMAGE: "${UV_BASE_IMAGE:-}"

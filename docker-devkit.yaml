@@ -1,3 +1,8 @@
 requires: ">=0.4"
 mirror:
   prefix: ghcr.io/outernet-foundation/mirror
+publish-compose:
+  repository: ghcr.io/outernet-foundation/lbe-toolkit
+  artifact: livekit-tier
+  files:
+    - workloads/livekit-tier/compose.yml
