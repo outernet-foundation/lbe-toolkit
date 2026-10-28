@@ -1,8 +1,20 @@
 requires: ">=0.4"
 mirror:
   prefix: ghcr.io/outernet-foundation/mirror
+generate-score:
+  project_name: livekit-tier
+  seams:
+    - name: livekit-tier
+      output: stack/generated/compose/compose.livekit-tier.yaml
+      workloads:
+        - livekit.yaml
+        - livekit-token.yaml
+        - ingress.yaml
+      provisioners:
+        - compose/livekit.yaml
+      patch_templates:
+        - compose/patches/tier-healthchecks.tpl
+        - compose/patches/ingress-tier.tpl
 publish-compose:
   repository: ghcr.io/outernet-foundation/lbe-toolkit
-  artifact: livekit-tier
-  files:
-    - workloads/livekit-tier/compose.yml
+

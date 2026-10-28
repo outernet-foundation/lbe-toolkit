@@ -1,0 +1,16 @@
+apiVersion: score.dev/v1b1
+metadata:
+  name: livekit-token
+containers:
+  livekit-token:
+    image: ghcr.io/outernet-foundation/lbe-toolkit/livekit-token:${LIVEKIT_TOKEN_SHA}
+    livenessProbe:
+      httpGet:
+        path: /livekit-token/health
+        port: 8000
+    variables:
+      LIVEKIT_API_KEY: ${resources.livekit-config.api_key}
+      LIVEKIT_API_SECRET: ${resources.livekit-config.api_secret}
+      LIVEKIT_SERVER_URL: ${resources.livekit-config.server_url}
+      DEPLOYMENT_ENVIRONMENT: ${resources.livekit-config.deployment_environment}
+      OTEL_EXPORTER_OTLP_ENDPOINT: ${resources.livekit-config.otel_endpoint}
