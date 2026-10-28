@@ -21,6 +21,7 @@
   value:
     livekit-token:
       condition: service_started
+      required: true
   description: Order the ingress after the token sidecar
 {{- end }}
 {{- end }}
