@@ -7,3 +7,6 @@ containers:
     variables:
       LIVEKIT_KEYS: ${resources.livekit-config.api_keys}
       LIVEKIT_CONFIG: ${resources.livekit-config.config}
+resources:
+  livekit-config:
+    type: livekit-config

@@ -14,3 +14,6 @@ containers:
       LIVEKIT_SERVER_URL: ${resources.livekit-config.server_url}
       DEPLOYMENT_ENVIRONMENT: ${resources.livekit-config.deployment_environment}
       OTEL_EXPORTER_OTLP_ENDPOINT: ${resources.livekit-config.otel_endpoint}
+resources:
+  livekit-config:
+    type: livekit-config
