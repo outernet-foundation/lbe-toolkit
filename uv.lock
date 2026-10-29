@@ -260,8 +260,8 @@ wheels = [
 
 [[package]]
 name = "docker-devkit"
-version = "0.0.0.dev0"
-source = { git = "https://github.com/outernet-foundation/docker-devkit?rev=ace17e476c531b1daca1a3b12215407a8ee14b55#ace17e476c531b1daca1a3b12215407a8ee14b55" }
+version = "0.4.11"
+source = { git = "https://github.com/outernet-foundation/docker-devkit?rev=11f2b083cb4c6c2b8ee8c7e50adbfcd2dabe3235#11f2b083cb4c6c2b8ee8c7e50adbfcd2dabe3235" }
 dependencies = [
     { name = "bashrun" },
     { name = "build-artifact-registry" },
@@ -561,7 +561,7 @@ dev = [
 dev = [
     { name = "basedpyright", specifier = ">=1.39.10,<1.40" },
     { name = "bashrun", specifier = ">=0.1.2" },
-    { name = "docker-devkit", git = "https://github.com/outernet-foundation/docker-devkit?rev=ace17e476c531b1daca1a3b12215407a8ee14b55" },
+    { name = "docker-devkit", git = "https://github.com/outernet-foundation/docker-devkit?rev=11f2b083cb4c6c2b8ee8c7e50adbfcd2dabe3235" },
     { name = "pytest", specifier = ">=8.0.0" },
     { name = "python-devkit", specifier = ">=0.1.0" },
     { name = "ruff", specifier = ">=0.14.11,<0.15" },

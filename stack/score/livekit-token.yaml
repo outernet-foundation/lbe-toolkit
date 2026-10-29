@@ -1,10 +1,16 @@
 apiVersion: score.dev/v1b1
 metadata:
   name: livekit-token
+  annotations:
+    outernet.internal/probe-adapter: python-urllib
 containers:
   livekit-token:
     image: ghcr.io/outernet-foundation/lbe-toolkit/livekit-token:${LIVEKIT_TOKEN_SHA}
     livenessProbe:
+      httpGet:
+        path: /livekit-token/health
+        port: 8000
+    readinessProbe:
       httpGet:
         path: /livekit-token/health
         port: 8000
