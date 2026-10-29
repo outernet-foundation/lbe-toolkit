@@ -3,17 +3,12 @@ services:
   ingress:
     annotations:
       compose.score.dev/workload-name: ingress
-    depends_on:
-      livekit-token:
-        condition: service_started
-        required: true
+      outernet.internal/publish: ${GATEWAY_PORT:?err}/8443
     hostname: ingress
     image: ${CADDY_IMAGE:?err}
     ports:
-    - mode: ingress
-      target: 8443
+    - target: 8443
       published: ${GATEWAY_PORT:?err}
-      protocol: tcp
     configs:
     - source: ingress-files-Caddyfile
       target: /etc/caddy/Caddyfile
