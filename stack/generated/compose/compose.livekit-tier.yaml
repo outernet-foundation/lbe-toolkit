@@ -45,6 +45,7 @@ services:
   livekit-token:
     annotations:
       compose.score.dev/workload-name: livekit-token
+      outernet.internal/probe-adapter: python-urllib
     environment:
       DEPLOYMENT_ENVIRONMENT: ${DEPLOYMENT_ENVIRONMENT:-development}
       LIVEKIT_API_KEY: ${LIVEKIT_API_KEY:?err}
