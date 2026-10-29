@@ -1,19 +1,13 @@
-requires: ">=0.4.11"
-mirror:
-  prefix: ghcr.io/outernet-foundation/mirror
-generate-score:
-  project_name: livekit-tier
-  bundles:
-    - name: livekit-tier
-      output: stack/generated/compose/compose.livekit-tier.yaml
-      workloads:
-        - livekit.yaml
-        - livekit-token.yaml
-        - ingress.yaml
-      provisioners:
-        - compose/livekit.yaml
-      patch_templates:
-        - compose/patches/ingress-tier.tpl
-publish-compose:
-  repository: ghcr.io/outernet-foundation/lbe-toolkit
-
+requires: ">=0.5"
+repository: ghcr.io/outernet-foundation/lbe-toolkit
+base_images:
+  UV_BASE_IMAGE: ghcr.io/astral-sh/uv:python3.13-bookworm-slim
+  LIVEKIT_SERVER_IMAGE: docker.io/livekit/livekit-server:v1.12.0
+  CADDY_IMAGE: docker.io/library/caddy:2.8.4-alpine
+project_name: livekit-tier
+bundles:
+  livekit-tier:
+    workloads:
+      - livekit.yaml
+      - livekit-token.yaml
+      - ingress.yaml

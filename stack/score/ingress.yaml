@@ -1,6 +1,8 @@
 apiVersion: score.dev/v1b1
 metadata:
   name: ingress
+  annotations:
+    outernet.internal/publish: "${GATEWAY_PORT:?err}/8443"
 containers:
   ingress:
     image: ${CADDY_IMAGE:?err}
