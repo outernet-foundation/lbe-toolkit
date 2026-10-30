@@ -8,7 +8,7 @@ dependencies = []
 dev = [
     "bashrun>=0.1.2",
     "basedpyright>=1.39.10,<1.40",
-    "docker-devkit>=0.4",
+    "docker-devkit==0.4.9.dev165",
     "python-devkit>=0.1.0",
     "pytest>=8.0.0",
     "ruff>=0.14.11,<0.15",
