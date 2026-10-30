@@ -260,8 +260,8 @@ wheels = [
 
 [[package]]
 name = "docker-devkit"
-version = "0.4.8"
-source = { registry = "https://pypi.org/simple" }
+version = "0.5.8"
+source = { git = "https://github.com/outernet-foundation/docker-devkit?rev=7fbed5b173b092c0bb7f3977d99b28a1bd46e365#7fbed5b173b092c0bb7f3977d99b28a1bd46e365" }
 dependencies = [
     { name = "bashrun" },
     { name = "build-artifact-registry" },
@@ -271,10 +271,6 @@ dependencies = [
     { name = "pyyaml" },
     { name = "strictyaml" },
     { name = "typer" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/da/fa/48e6ee07603730c9883b03a09904a869c2ee476411a623ed08bf7175d35c/docker_devkit-0.4.8.tar.gz", hash = "sha256:0f994aa96bd3e638318b88a2cba306a853b046e0dde90f883ede95ff3df46837", size = 85949, upload-time = "2026-10-21T21:27:24.083Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/f3/8e/3c266f5a8994b97b93aa785ff71c0d53445331e51c79fb5b47f71f22f68b/docker_devkit-0.4.8-py3-none-any.whl", hash = "sha256:82b578bb9e91a37f95575b2e8818b03859b6477bb60767a7905283f99f3a70b4", size = 32848, upload-time = "2026-10-21T21:27:23.029Z" },
 ]
 
 [[package]]
@@ -565,7 +561,7 @@ dev = [
 dev = [
     { name = "basedpyright", specifier = ">=1.39.10,<1.40" },
     { name = "bashrun", specifier = ">=0.1.2" },
-    { name = "docker-devkit", specifier = ">=0.4" },
+    { name = "docker-devkit", git = "https://github.com/outernet-foundation/docker-devkit?rev=7fbed5b173b092c0bb7f3977d99b28a1bd46e365" },
     { name = "pytest", specifier = ">=8.0.0" },
     { name = "python-devkit", specifier = ">=0.1.0" },
     { name = "ruff", specifier = ">=0.14.11,<0.15" },

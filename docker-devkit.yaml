@@ -1,3 +1,19 @@
-requires: ">=0.4"
-mirror:
-  prefix: ghcr.io/outernet-foundation/mirror
+requires: ">=0.5.8"
+repository: ghcr.io/outernet-foundation/lbe-toolkit
+base_images:
+  UV_BASE_IMAGE: ghcr.io/astral-sh/uv:python3.13-bookworm-slim
+  LIVEKIT_SERVER_IMAGE: docker.io/livekit/livekit-server:v1.12.0
+  CADDY_IMAGE: docker.io/library/caddy:2.8.4-alpine
+project_name: livekit-tier
+gateway: ${GATEWAY_PORT:?err}
+services:
+  livekit:
+    workloads:
+      - livekit.yaml
+      - livekit-token.yaml
+    routes:
+      - path: /livekit-token/*
+        upstream: livekit-token:8000
+    ports:
+      - ${LIVEKIT_SIGNALING_PORT:?err}/${LIVEKIT_SIGNALING_PORT:?err}/tcp
+      - ${LIVEKIT_RTC_PORT:?err}/${LIVEKIT_RTC_PORT:?err}/udp
