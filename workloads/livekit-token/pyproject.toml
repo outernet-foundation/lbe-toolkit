@@ -1,0 +1,20 @@
+[project]
+name = "lbe-toolkit-livekit-token"
+version = "0.1.0"
+description = "LiveKit token issuer sidecar for the toolkit's self-hosted realtime feature"
+requires-python = ">=3.13"
+dependencies = [
+    "litestar>=2.19.0",
+    "livekit-api>=1.0.4",
+    "opentelemetry-sdk>=1.42.0",
+    "opentelemetry-exporter-otlp-proto-grpc>=1.42.0",
+    "pydantic>=2.12.5",
+    "uvicorn[standard]>=0.35.0",
+]
+
+[tool.deptry.per_rule_ignores]
+# uvicorn: ASGI server entrypoint, only invoked from the Dockerfile ENTRYPOINT.
+# src: the app package is literally named src (uvicorn src.main:app); the
+# intra-package import prefix is not a dependency.
+DEP002 = ["uvicorn"]
+DEP001 = ["src"]

@@ -5,7 +5,34 @@ requires-python = ">=3.13"
 dependencies = []
 
 [dependency-groups]
-dev = ["unity-devkit>=0.1.25"]
+dev = [
+    "bashrun>=0.1.2",
+    "basedpyright>=1.39.10,<1.40",
+    "docker-devkit==0.4.9.dev165",
+    "python-devkit>=0.1.0",
+    "pytest>=8.0.0",
+    "ruff>=0.14.11,<0.15",
+    "unity-devkit>=0.1.25",
+]
 
 [tool.uv]
 required-version = "==0.12.15"
+
+[tool.uv.workspace]
+members = ["workloads/livekit-token"]
+
+[tool.python-devkit.preflight]
+sync-args = ["--all-packages"]
+
+[tool.basedpyright]
+venvPath = "."
+venv = ".venv"
+typeCheckingMode = "strict"
+include = [
+    "workloads/**/src/**/*.py",
+    "workloads/**/src/**/*.pyi",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["workloads/livekit-token/tests"]
+pythonpath = ["workloads/livekit-token"]
