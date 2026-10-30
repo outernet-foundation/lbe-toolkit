@@ -1,0 +1,49 @@
+name: livekit-tier
+services:
+  livekit:
+    annotations:
+      compose.score.dev/workload-name: livekit
+    environment:
+      LIVEKIT_CONFIG: |-
+        port: ${LIVEKIT_SIGNALING_PORT:?err}
+        rtc:
+          udp_port: ${LIVEKIT_RTC_PORT:?err}
+          tcp_port: 0
+          use_external_ip: false
+          node_ip: ${LIVEKIT_RTC_IP:?err}
+          # Bind the RTC UDP mux to the container's single bridge interface.
+          # Forwarders deliver RTC UDP to that one socket — rathole over the
+          # compose network, or a host-level forwarder via the published port.
+          # pion registers each ICE session only on the socket behind the single
+          # node_ip-advertised candidate, so exactly one bound interface must
+          # receive the forwarded traffic (pion/ice#541).
+          interfaces:
+            includes: [eth0]
+        logging:
+          json: true
+          level: info
+      LIVEKIT_KEYS: '${LIVEKIT_API_KEY:?err}: ${LIVEKIT_API_SECRET:?err}'
+    hostname: livekit
+    image: ${LIVEKIT_SERVER_IMAGE:?err}
+  livekit-token:
+    annotations:
+      compose.score.dev/workload-name: livekit-token
+      outernet.internal/probe-adapter: python-urllib
+    environment:
+      DEPLOYMENT_ENVIRONMENT: ${DEPLOYMENT_ENVIRONMENT:-development}
+      LIVEKIT_API_KEY: ${LIVEKIT_API_KEY:?err}
+      LIVEKIT_API_SECRET: ${LIVEKIT_API_SECRET:?err}
+      LIVEKIT_SERVER_URL: ws://${LIVEKIT_SIGNALING_IP:?err}:${LIVEKIT_SIGNALING_PORT:?err}
+      OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-http://alloy:4317}
+    hostname: livekit-token
+    healthcheck:
+      test:
+      - CMD
+      - python
+      - -c
+      - import urllib.request; urllib.request.urlopen('http://localhost:8000/livekit-token/health')
+      timeout: 5s
+      interval: 5s
+      retries: 3
+      start_period: 5s
+    image: ghcr.io/outernet-foundation/lbe-toolkit/livekit-token:tree-4fb1774cdf494dddf0bb9af71b430e8302cb651a
