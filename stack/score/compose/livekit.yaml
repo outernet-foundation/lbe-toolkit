@@ -1,0 +1,35 @@
+# LiveKit runtime provisioner (compose): outputs-only passthrough for the tier's
+# env holes. Score workload specs cannot carry runtime ${VAR} holes (score
+# validates placeholders as dotted resource references), while provisioner
+# output strings pass through to compose as docker-runtime interpolation holes —
+# every hole stays single-$ in the artifact and the consumer's .env fills it at
+# include time. There is no k8s twin: the tier is compose-only.
+- uri: template://outernet/livekit-config
+  type: livekit-config
+  description: Runtime LiveKit credentials and server config resolved from the consumer's .env.
+  state: {}
+  outputs:
+    api_keys: "${LIVEKIT_API_KEY:?err}: ${LIVEKIT_API_SECRET:?err}"
+    api_key: ${LIVEKIT_API_KEY:?err}
+    api_secret: ${LIVEKIT_API_SECRET:?err}
+    server_url: "ws://${LIVEKIT_SIGNALING_IP:?err}:${LIVEKIT_SIGNALING_PORT:?err}"
+    deployment_environment: ${DEPLOYMENT_ENVIRONMENT:-development}
+    otel_endpoint: ${OTEL_EXPORTER_OTLP_ENDPOINT:-http://alloy:4317}
+    config: |
+      port: ${LIVEKIT_SIGNALING_PORT:?err}
+      rtc:
+        udp_port: ${LIVEKIT_RTC_PORT:?err}
+        tcp_port: 0
+        use_external_ip: false
+        node_ip: ${LIVEKIT_RTC_IP:?err}
+        # Bind the RTC UDP mux to the container's single bridge interface.
+        # Forwarders deliver RTC UDP to that one socket — rathole over the
+        # compose network, or a host-level forwarder via the published port.
+        # pion registers each ICE session only on the socket behind the single
+        # node_ip-advertised candidate, so exactly one bound interface must
+        # receive the forwarded traffic (pion/ice#541).
+        interfaces:
+          includes: [eth0]
+      logging:
+        json: true
+        level: info
