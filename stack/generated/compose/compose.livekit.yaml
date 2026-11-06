@@ -1,6 +1,10 @@
-name: livekit-tier
 services:
-  livekit:
+  livekit-livekit:
+    image: ${LIVEKIT__LOCK__LIVEKIT_SERVER_IMAGE:?err}
+    networks:
+      livekit-net:
+        aliases:
+        - livekit
     annotations:
       compose.score.dev/workload-name: livekit
     environment:
@@ -24,8 +28,12 @@ services:
           level: info
       LIVEKIT_KEYS: '${LIVEKIT_API_KEY:?err}: ${LIVEKIT_API_SECRET:?err}'
     hostname: livekit
-    image: ${LIVEKIT_SERVER_IMAGE:?err}
-  livekit-token:
+  livekit-livekit-token:
+    image: ghcr.io/outernet-foundation/lbe-toolkit/livekit-token:tree-4fb1774cdf494dddf0bb9af71b430e8302cb651a
+    networks:
+      livekit-net:
+        aliases:
+        - livekit-token
     annotations:
       compose.score.dev/workload-name: livekit-token
       outernet.internal/probe-adapter: python-urllib
@@ -46,4 +54,6 @@ services:
       interval: 5s
       retries: 3
       start_period: 5s
-    image: ghcr.io/outernet-foundation/lbe-toolkit/livekit-token:tree-4fb1774cdf494dddf0bb9af71b430e8302cb651a
+networks:
+  livekit-net: {}
+name: livekit-tier
