@@ -1,0 +1,12 @@
+apiVersion: score.dev/v1b1
+metadata:
+  name: livekit
+containers:
+  livekit:
+    image: ${LIVEKIT_SERVER_IMAGE:?err}
+    variables:
+      LIVEKIT_KEYS: ${resources.livekit-config.api_keys}
+      LIVEKIT_CONFIG: ${resources.livekit-config.config}
+resources:
+  livekit-config:
+    type: livekit-config

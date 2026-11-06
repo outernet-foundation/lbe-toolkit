@@ -25,7 +25,7 @@ namespace Outernet.LBEToolkit.StateSynchronization
 
         public event Action<int, string, byte[]> onEventReceived;
 
-        public UniTask Connect(string roomID, CancellationToken cancellationToken = default)
+        public UniTask Connect(string backendUrl, string roomID, CancellationToken cancellationToken = default)
         {
             hostId = 1;
             playerId = 1;
