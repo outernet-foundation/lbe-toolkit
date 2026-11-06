@@ -1,4 +1,4 @@
-.env
+boatyard.values.yaml
 .env.self
 metadata.json
 __pycache__/

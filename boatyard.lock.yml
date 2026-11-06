@@ -1,0 +1,19 @@
+platforms:
+- linux/amd64
+images:
+  ALPINE_IMAGE:
+    index: ghcr.io/outernet-foundation/mirror/docker.io/library/alpine:3.20@sha256:d9e853e87e55526f6b2917df91a2115c36dd7c696a35be12163d44e6e2a4b6bc
+    platforms:
+      linux/amd64: ghcr.io/outernet-foundation/mirror/docker.io/library/alpine:3.20@sha256:c64c687cbea9300178b30c95835354e34c4e4febc4badfe27102879de0483b5e
+  CADDY_IMAGE:
+    index: ghcr.io/outernet-foundation/mirror/docker.io/library/caddy:2.8.4-alpine@sha256:af32e97399febea808609119bb21544d0265c58a02836576e32a2d082c262c17
+    platforms:
+      linux/amd64: ghcr.io/outernet-foundation/mirror/docker.io/library/caddy:2.8.4-alpine@sha256:b95ed06fbc6d74d24a40902090c8cc6086ce7d08ba60a3a7e8e62bf164a9d7bb
+  LIVEKIT_SERVER_IMAGE:
+    index: ghcr.io/outernet-foundation/mirror/docker.io/livekit/livekit-server:v1.12.0@sha256:b1281e66e35e8f9749ffbcf0fe6ab4d40d1438aa00f36c2ea7e6975e5e261e2e
+    platforms:
+      linux/amd64: ghcr.io/outernet-foundation/mirror/docker.io/livekit/livekit-server:v1.12.0@sha256:2c80c07a3e2bb11b1b49000a029819f8c6a81b3df3fbf0f90fc29b13520f40b6
+  UV_BASE_IMAGE:
+    index: ghcr.io/outernet-foundation/mirror/ghcr.io/astral-sh/uv:0.12.15-python3.13-trixie-slim@sha256:3ba6b26a3424b592f2dd630450caa526d107597e1cc38f8964a154d4123952b0
+    platforms:
+      linux/amd64: ghcr.io/outernet-foundation/mirror/ghcr.io/astral-sh/uv:0.12.15-python3.13-trixie-slim@sha256:8a36c852825bdc2f59b63b8ddfa1ba12df8d9f63dbdd8086f991a5f0199d1b02
