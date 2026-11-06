@@ -1,12 +1,13 @@
 # LiveKit runtime provisioner (compose): outputs-only passthrough for the tier's
-# env holes. Score workload specs cannot carry runtime ${VAR} holes (score
+# env slots. Score workload specs cannot carry runtime ${VAR} slots (score
 # validates placeholders as dotted resource references), while provisioner
-# output strings pass through to compose as docker-runtime interpolation holes —
-# every hole stays single-$ in the artifact and the consumer's .env fills it at
-# include time. There is no k8s twin: the tier is compose-only.
+# output strings pass through to compose as docker-runtime interpolation slots —
+# every slot stays single-$ in the artifact and the consumer's
+# boatyard.values.yaml fills it at include time. There is no k8s twin: the tier
+# is compose-only.
 - uri: template://outernet/livekit-config
   type: livekit-config
-  description: Runtime LiveKit credentials and server config resolved from the consumer's .env.
+  description: Runtime LiveKit credentials and server config resolved from the consumer's boatyard.values.yaml.
   state: {}
   outputs:
     api_keys: "${LIVEKIT_API_KEY:?err}: ${LIVEKIT_API_SECRET:?err}"
