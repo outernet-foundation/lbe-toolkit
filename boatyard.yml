@@ -1,4 +1,4 @@
-requires: ">=0.6.5"
+requires: ">=0.6.6"
 repository: ghcr.io/outernet-foundation/lbe-toolkit
 project_name: livekit-tier
 gateway: ${GATEWAY_PORT:?err}
