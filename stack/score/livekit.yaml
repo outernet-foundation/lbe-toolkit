@@ -1,9 +1,10 @@
 apiVersion: score.dev/v1b1
 metadata:
   name: livekit
+  annotations:
+    outernet.internal/lock: livekit=LIVEKIT_SERVER_IMAGE
 containers:
   livekit:
-    image: ${LIVEKIT_SERVER_IMAGE:?err}
     variables:
       LIVEKIT_KEYS: ${resources.livekit-config.api_keys}
       LIVEKIT_CONFIG: ${resources.livekit-config.config}
