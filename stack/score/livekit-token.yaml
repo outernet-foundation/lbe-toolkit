@@ -2,6 +2,8 @@ apiVersion: score.dev/v1b1
 metadata:
   name: livekit-token
   annotations:
+    # The route the consumer's gateway mounts.
+    outernet.internal/route: /livekit-token/*=livekit-token:8000
     outernet.internal/dockerfile: livekit-token=workloads/livekit-token/Dockerfile
     outernet.internal/probe-adapter: python-urllib
 containers:
