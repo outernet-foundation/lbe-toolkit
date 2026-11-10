@@ -1,0 +1,16 @@
+apiVersion: score.dev/v1b1
+metadata:
+  name: livekit
+  annotations:
+    # The publishes the consumer's override document materializes on the shared
+    # network: signaling tcp plus the RTC udp range.
+    outernet.internal/publish: 6178:6178,5957:5957/udp
+    outernet.internal/lock: livekit=LIVEKIT_SERVER_IMAGE
+containers:
+  livekit:
+    variables:
+      LIVEKIT_KEYS: ${resources.livekit-config.api_keys}
+      LIVEKIT_CONFIG: ${resources.livekit-config.config}
+resources:
+  livekit-config:
+    type: livekit-config
