@@ -20,7 +20,7 @@ required-version = "==0.12.15"
 
 [tool.uv.sources]
 bashrun = { path = "../bashrun" }
-boatyard = { path = "../boatyard" }
+boatyard = { git = "https://github.com/outernet-foundation/boatyard.git", rev = "ec88448397f6f5f264f8050fb2c109e4a129d2f0" }
 
 [tool.uv.workspace]
 members = ["workloads/livekit-token"]
