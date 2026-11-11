@@ -4,7 +4,7 @@ services:
     annotations:
       compose.score.dev/workload-name: livekit
       outernet.internal/lock: livekit=LIVEKIT_SERVER_IMAGE
-      outernet.internal/publish: 6178:6178,5957:5957/udp
+      outernet.internal/publish-port: 6178:6178,5957:5957/udp
     environment:
       LIVEKIT_CONFIG: |-
         port: ${LIVEKIT_SIGNALING_PORT:?err}
