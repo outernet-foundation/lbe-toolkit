@@ -220,7 +220,7 @@ wheels = [
 [[package]]
 name = "boatyard"
 version = "0.8.0"
-source = { directory = "../boatyard" }
+source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "bashrun" },
     { name = "build-artifact-registry" },
@@ -229,24 +229,9 @@ dependencies = [
     { name = "pyyaml" },
     { name = "typer" },
 ]
-
-[package.metadata]
-requires-dist = [
-    { name = "bashrun", specifier = ">=0.1.0" },
-    { name = "build-artifact-registry", specifier = ">=0.2.2" },
-    { name = "packaging", specifier = ">=24.1" },
-    { name = "pydantic", specifier = ">=2.11.7" },
-    { name = "pyyaml", specifier = ">=6.0" },
-    { name = "typer", specifier = ">=0.17.4" },
-]
-
-[package.metadata.requires-dev]
-dev = [
-    { name = "basedpyright", specifier = ">=1.39.10" },
-    { name = "pytest", specifier = ">=8.0.0" },
-    { name = "python-devkit", specifier = ">=0.3.0.dev0" },
-    { name = "ruff", specifier = ">=0.14.11" },
-    { name = "types-pyyaml", specifier = ">=6.0.12.20260906" },
+sdist = { url = "https://files.pythonhosted.org/packages/75/17/51b278e34a5da31a091642646e9addeca87a3389a42730f7b84554384f63/boatyard-0.8.0.tar.gz", hash = "sha256:34b9d43afc450f32f72465e00c1ba980e63c9674af7b6aa0da18af64c8e6e5f1", size = 171917, upload-time = "2026-11-12T21:07:14.637Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/04/e1/4298f5cefa62abdfb82f0a051a6009ac20d45abee1c3b56daa942caa8386/boatyard-0.8.0-py3-none-any.whl", hash = "sha256:2276a6da2be728a7f3c6d9a77c38e27790b8fea8d915b2480a6d1cc06b7602a2", size = 77368, upload-time = "2026-11-12T21:07:13.421Z" },
 ]
 
 [[package]]
@@ -578,7 +563,7 @@ dev = [
 dev = [
     { name = "basedpyright", specifier = ">=1.39.10,<1.40" },
     { name = "bashrun", specifier = ">=0.1.2" },
-    { name = "boatyard", directory = "../boatyard" },
+    { name = "boatyard", specifier = ">=0.8" },
     { name = "pytest", specifier = ">=8.0.0" },
     { name = "python-devkit", specifier = ">=0.1.0" },
     { name = "ruff", specifier = ">=0.14.11,<0.15" },
