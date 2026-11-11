@@ -19,6 +19,7 @@ dev = [
 required-version = "==0.12.15"
 
 [tool.uv.sources]
+bashrun = { path = "../bashrun" }
 boatyard = { path = "../boatyard" }
 
 [tool.uv.workspace]

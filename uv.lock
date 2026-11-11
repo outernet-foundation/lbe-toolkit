@@ -210,11 +210,16 @@ wheels = [
 
 [[package]]
 name = "bashrun"
-version = "0.8.1"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/23/55/9a0811fdafe13499c1ad6704bd35550bcb960ed021630df338726cfcbff2/bashrun-0.8.1.tar.gz", hash = "sha256:117b5c4d7971658cb206a476c23a762705b209a7523b9e7f3902660038e37e59", size = 31043, upload-time = "2026-10-11T22:07:09.86Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/f3/27/35d600831cd22b2c50d10d5529457af8199111c6f8b4e576ba8e9e68be29/bashrun-0.8.1-py3-none-any.whl", hash = "sha256:9fbf1bbbc0de76c17e7e4a762d1bc6109ac31b30dcdc91c34be2dcf238fa6329", size = 7796, upload-time = "2026-10-11T22:07:08.91Z" },
+version = "0.8.2"
+source = { directory = "../bashrun" }
+
+[package.metadata]
+
+[package.metadata.requires-dev]
+dev = [
+    { name = "basedpyright", specifier = ">=1.39.10" },
+    { name = "pytest", specifier = ">=8.0.0" },
+    { name = "ruff", specifier = ">=0.14.11" },
 ]
 
 [[package]]
@@ -227,16 +232,18 @@ dependencies = [
     { name = "packaging" },
     { name = "pydantic" },
     { name = "pyyaml" },
+    { name = "rich" },
     { name = "typer" },
 ]
 
 [package.metadata]
 requires-dist = [
-    { name = "bashrun", specifier = ">=0.1.0" },
+    { name = "bashrun", directory = "../bashrun" },
     { name = "build-artifact-registry", specifier = ">=0.2.2" },
     { name = "packaging", specifier = ">=24.1" },
     { name = "pydantic", specifier = ">=2.11.7" },
     { name = "pyyaml", specifier = ">=6.0" },
+    { name = "rich", specifier = ">=13" },
     { name = "typer", specifier = ">=0.17.4" },
 ]
 
@@ -577,7 +584,7 @@ dev = [
 [package.metadata.requires-dev]
 dev = [
     { name = "basedpyright", specifier = ">=1.39.10,<1.40" },
-    { name = "bashrun", specifier = ">=0.1.2" },
+    { name = "bashrun", directory = "../bashrun" },
     { name = "boatyard", directory = "../boatyard" },
     { name = "pytest", specifier = ">=8.0.0" },
     { name = "python-devkit", specifier = ">=0.1.0" },
