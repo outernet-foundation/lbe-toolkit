@@ -1,0 +1,43 @@
+# Copy to boatyard.values.yaml (gitignored) and adjust for your network.
+# boatyard 0.8 grammar: the top-level keys below plus one flat ALL_CAPS
+# values: list. A values key no selected bundle consumes is refused, so every
+# entry below is consumed by the livekit-tier bundle.
+#
+# Standalone bring-up:  uv run boatyard up --build
+# The livekit-token image is local-source (built from workloads/livekit-token);
+# the livekit server image pulls from the org mirror. --build covers the first
+# run; drop it once the livekit-token image is present.
+
+# The only bundle — the livekit group's tier option.
+bundles: [livekit-tier]
+
+# Public face — the address the gateway publishes (config gateway_port 8443).
+# Same-machine dev: 127.0.0.1. LAN: the host's LAN IP. Omit public_host and
+# public_scheme to skip the gateway entirely (the /livekit-token route then has
+# no front door, but the bundle containers still run with their published ports).
+public_host: 127.0.0.1
+public_scheme: http
+
+# Override the gateway's published host port when 8443 collides with another
+# stack on the host. Standalone, leave it at the config default 8443.
+# gateway_port: 8443
+
+values:
+  DEPLOYMENT_ENVIRONMENT: development
+
+  # LiveKit credentials — the API secret must be >= 34 chars for HS256 signing.
+  LIVEKIT_API_KEY: devkey
+  LIVEKIT_API_SECRET: devsecretdevsecretdevsecretdevsecret
+
+  # The address LiveKit advertises to clients (signaling/ICE candidates).
+  # Same-machine dev: 127.0.0.1 (clients reach the published ports on the host).
+  # LAN: the host's LAN IP. These are the advertised candidate IPs, not the bind.
+  LIVEKIT_SIGNALING_IP: 127.0.0.1
+  LIVEKIT_SIGNALING_PORT: 6178
+  LIVEKIT_RTC_IP: 127.0.0.1
+  LIVEKIT_RTC_PORT: 5957
+
+  # OTEL exporter — the bundle defaults to http://alloy:4317 (placeframe's
+  # telemetry sidecar). Standalone, no alloy is on the network, so export
+  # attempts fail silently. Uncomment to retarget or suppress.
+  # OTEL_EXPORTER_OTLP_ENDPOINT: ""
