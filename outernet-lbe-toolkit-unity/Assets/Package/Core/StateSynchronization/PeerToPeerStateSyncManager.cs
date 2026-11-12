@@ -47,6 +47,7 @@ namespace Outernet.LBEToolkit.StateSynchronization
         private HashSet<HighFrequencyPrimitiveData> _dirtyHighFrequencyPrimitives = new();
         private HashSet<HighFrequencyPrimitiveData> _syncedHighFrequencyPrimitives = new();
 
+        private bool _initComplete;
         private IDisposable _subscriptions;
         private TaskCompletionSource<bool> _initialSyncCompletionSource = new TaskCompletionSource<bool>();
 
@@ -73,6 +74,9 @@ namespace Outernet.LBEToolkit.StateSynchronization
             _client.onPlayerEnteredRoom += HandlePlayerJoined;
             _client.onPlayerLeftRoom += HandlePlayerLeft;
 
+            _incrementalSyncStream.WriteByte(INCREMENTAL_SYNC_EVENT);
+            _highFrequencySyncStream.WriteByte(HIGH_FREQUENCY_SYNC_EVENT);
+
             _subscriptions = new ComposedDisposable(
 
                 synchronizationTarget
@@ -84,8 +88,7 @@ namespace Outernet.LBEToolkit.StateSynchronization
 
             );
 
-            _incrementalSyncStream.WriteByte(INCREMENTAL_SYNC_EVENT);
-            _highFrequencySyncStream.WriteByte(HIGH_FREQUENCY_SYNC_EVENT);
+            _initComplete = true;
         }
 
         private void HandlePlayerJoined(int playerId)
@@ -113,6 +116,9 @@ namespace Outernet.LBEToolkit.StateSynchronization
 
         private void HandleSceneChanged(StateOperation op)
         {
+            if (!_initComplete)
+                return;
+
             if (_applyingRemoteChanges)
                 return;
 
@@ -497,6 +503,7 @@ namespace Outernet.LBEToolkit.StateSynchronization
                             }
                             else
                             {
+                                stream.Position = startPosition + messageLength;
                                 continue;
                             }
                         }
