@@ -479,7 +479,7 @@ namespace Outernet.LBEToolkit.StateSynchronization
 
                         if (!highFrequencyPrimitiveLookup.TryGetValue(new(ownerId, primitiveId), out var highFrequencyPrimitiveData))
                         {
-                            Debug.LogError($"Target state not found. Owner ID: {ownerId} Primitive ID: {primitiveId}");
+                            Debug.LogError($"Target state not found. Owner ID: {ownerId} Primitive ID: {primitiveId} Topic: {topic}");
                             stream.Position = startPosition + messageLength;
                             continue;
                         }
