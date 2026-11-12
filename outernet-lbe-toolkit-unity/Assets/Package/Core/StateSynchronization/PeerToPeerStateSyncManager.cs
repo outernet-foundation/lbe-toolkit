@@ -59,6 +59,7 @@ namespace Outernet.LBEToolkit.StateSynchronization
             public IDisposable subscription;
             public byte syncRate;
             public float lastSyncTime;
+            public string relativePath;
         }
 
         public PeerToPeerStateSyncManager(T synchronizationTarget, IRealtimeClient client, string topic = default)
@@ -76,7 +77,7 @@ namespace Outernet.LBEToolkit.StateSynchronization
 
                 synchronizationTarget
                     .ObservableChildrenRecursive()
-                    .ObservableWhere(x => !ShouldSync(x))
+                    .ObservableWhere(x => ShouldSync(x))
                     .ObservableDistinct()
                     .ObservableCombine()
                     .Subscribe(HandleSceneChanged)
@@ -89,7 +90,8 @@ namespace Outernet.LBEToolkit.StateSynchronization
 
         private void HandlePlayerJoined(int playerId)
         {
-            SendInitialSyncToPendingPlayers(playerId);
+            if (_client.playerId == _client.hostId)
+                SendInitialSyncToPlayers(playerId);
         }
 
         private void HandlePlayerLeft(int playerId)
@@ -106,7 +108,7 @@ namespace Outernet.LBEToolkit.StateSynchronization
         private void HandleHostChanged(int hostId)
         {
             if (_client.playerId == hostId && _client.connected)
-                SendInitialSyncToPendingPlayers(_client.players.Except(_synchronizedPlayers).Where(x => x != _client.playerId).ToArray());
+                SendInitialSyncToPlayers(_client.players.Except(_synchronizedPlayers).Where(x => x != _client.playerId).ToArray());
         }
 
         private void HandleSceneChanged(StateOperation op)
@@ -129,7 +131,7 @@ namespace Outernet.LBEToolkit.StateSynchronization
             WriteChange(_incrementalSyncStream, op);
         }
 
-        private void SendInitialSyncToPendingPlayers(params int[] targets)
+        private void SendInitialSyncToPlayers(params int[] targets)
         {
             if (targets.Length == 0)
                 return;
@@ -137,13 +139,14 @@ namespace Outernet.LBEToolkit.StateSynchronization
             using (var writer = new BinaryWriter(_initSyncStream, Encoding.UTF8, true))
             {
                 writer.Write(INITIAL_SYNC_EVENT);
-                writer.Write(synchronizationTarget.ToJSON(x => !x.isView && !ShouldSync(x)).ToString());
+                var json = synchronizationTarget.ToJSON(x => !x.isView && ShouldSync(x)).ToString();
+                writer.Write(json);
 
                 foreach (var highFrequencyPrimitive in _highFrequencyPrimitives.Values)
                 {
                     writer.Write(highFrequencyPrimitive.ownerId);
                     writer.Write(highFrequencyPrimitive.primitiveId);
-                    writer.Write(highFrequencyPrimitive.target.nodePath);
+                    writer.Write(highFrequencyPrimitive.relativePath);
                 }
             }
 
@@ -191,18 +194,23 @@ namespace Outernet.LBEToolkit.StateSynchronization
 
         private void HandleEventReceived(int senderId, string topic, byte[] data)
         {
+            if (topic != this.topic)
+                return;
+
             var eventCode = data[0];
 
             if (eventCode == INITIAL_SYNC_EVENT)
             {
+                if (synchronized)
+                    throw new Exception("GOT DUPLICATE INITIAL SYNC EVENT");
+
                 using (var stream = new MemoryStream(data, 1, data.Length - 1))
                 using (var reader = new BinaryReader(stream))
                 {
                     var json = reader.ReadString();
 
                     _applyingRemoteChanges = true;
-
-                    ApplyInitialSync(synchronizationTarget, JSONNode.Parse(json));
+                    synchronizationTarget.context.ExecuteBatchOperation(() => synchronizationTarget.FromJSON(JSONNode.Parse(json)));
 
                     while (reader.BaseStream.Position < reader.BaseStream.Length)
                     {
@@ -225,9 +233,13 @@ namespace Outernet.LBEToolkit.StateSynchronization
                 _client.SendEvent(synchronizedMessage, true, SyncTarget.Others, topic);
 
                 synchronized = true;
+                _initialSyncCompletionSource?.TrySetResult(true);
             }
             else if (eventCode == INCREMENTAL_SYNC_EVENT)
             {
+                if (!synchronized)
+                    return;
+
                 _applyingRemoteChanges = true;
                 ApplyIncrementalSync(synchronizationTarget, _pathIDCache, data, 1);
                 _applyingRemoteChanges = false;
@@ -240,6 +252,9 @@ namespace Outernet.LBEToolkit.StateSynchronization
             }
             else if (eventCode == HIGH_FREQUENCY_SYNC_EVENT)
             {
+                if (!synchronized)
+                    return;
+
                 _applyingRemoteChanges = true;
                 ApplyHighFrequencySync(synchronizationTarget, _highFrequencyPrimitives, senderId, data, 1);
                 _applyingRemoteChanges = false;
@@ -256,39 +271,50 @@ namespace Outernet.LBEToolkit.StateSynchronization
             }
             else
             {
-                throw new Exception($"Unhandled event code {eventCode}");
+                throw new Exception($"Unhandled event code {eventCode} with topic {topic}");
             }
         }
 
-        private void AddHighFrequencyPrimitiveInternal(int ownerId, uint primitiveId, string path, byte syncRate, bool isLocal, bool sendEvent)
+        private void AddHighFrequencyPrimitiveInternal(int ownerId, uint primitiveId, string relativePath, byte syncRate, bool isLocal, bool sendEvent)
         {
             var id = (ownerId, primitiveId);
-            var primitive = (IStateValue)synchronizationTarget.GetChild(path);
+            var primitive = default(IStateValue);
+            var serializer = default(Serializer);
+
+            if (synchronizationTarget.TryGetChild(relativePath, out var target))
+            {
+                primitive = (IStateValue)target;
+                serializer = Serialization.GetSerializer(primitive.valueType);
+            }
 
             var highFrequencyPrimitiveData = new HighFrequencyPrimitiveData()
             {
                 ownerId = ownerId,
                 primitiveId = primitiveId,
                 target = primitive,
-                serializer = Serialization.GetSerializer(primitive.valueType),
-                syncRate = syncRate
+                serializer = serializer,
+                syncRate = syncRate,
+                relativePath = relativePath
             };
 
             _highFrequencyPrimitives.Add(id, highFrequencyPrimitiveData);
 
-            highFrequencyPrimitiveData.subscription = primitive.Subscribe(new ValueObserver(
-                onNext: !isLocal ? null : _ =>
-                {
-                    if (!_applyingRemoteChanges)
-                        _dirtyHighFrequencyPrimitives.Add(highFrequencyPrimitiveData);
-                },
-                onDispose: () => RemoveHighFrequencyPrimitiveInternal(ownerId, primitiveId, false)
-            ));
+            if (primitive != null)
+            {
+                highFrequencyPrimitiveData.subscription = primitive.Subscribe(new ValueObserver(
+                    onNext: !isLocal ? null : _ =>
+                    {
+                        if (!_applyingRemoteChanges)
+                            _dirtyHighFrequencyPrimitives.Add(highFrequencyPrimitiveData);
+                    },
+                    onDispose: () => RemoveHighFrequencyPrimitiveInternal(ownerId, primitiveId, false)
+                ));
+            }
 
             if (!sendEvent)
                 return;
 
-            var data = new byte[Encoding.UTF8.GetByteCount(primitive.nodePath) + 5]; // +5 for the size of id + size of event id
+            var data = new byte[Encoding.UTF8.GetByteCount(relativePath) + 5]; // +5 for the size of id + size of event id
 
             data[0] = HIGH_FREQUENCY_ADD_ID_EVENT;
             data[1] = (byte)(highFrequencyPrimitiveData.primitiveId & 0xFF);         // Lowest byte
@@ -296,7 +322,7 @@ namespace Outernet.LBEToolkit.StateSynchronization
             data[3] = (byte)((highFrequencyPrimitiveData.primitiveId >> 16) & 0xFF);
             data[4] = (byte)((highFrequencyPrimitiveData.primitiveId >> 24) & 0xFF); // Highest byte
 
-            Encoding.UTF8.GetBytes(primitive.nodePath, 0, primitive.nodePath.Length, data, 5);
+            Encoding.UTF8.GetBytes(relativePath, 0, relativePath.Length, data, 5);
 
             _client.SendEvent(data, true, SyncTarget.Others, topic);
         }
@@ -359,13 +385,6 @@ namespace Outernet.LBEToolkit.StateSynchronization
             throw new Exception("No unused high frequency primitive id could be found.");
         }
 
-        private void ApplyInitialSync(T state, JSONNode json)
-        {
-            state.context.ExecuteBatchOperation(() => state.FromJSON(json));
-            synchronized = true;
-            _initialSyncCompletionSource?.TrySetResult(true);
-        }
-
         private void ApplyIncrementalSync(T state, PathIDCache<T> pathIDCache, byte[] data, int index = -1, int length = -1)
         {
             state.context.ExecuteBatchOperation(() =>
@@ -385,7 +404,6 @@ namespace Outernet.LBEToolkit.StateSynchronization
 
                         if (!pathIDCache.TryReadPath(state, reader, out var dest))
                         {
-                            Debug.LogError($"Target state not found!");
                             stream.Position = startPosition + messageLength;
                             continue;
                         }
@@ -466,6 +484,23 @@ namespace Outernet.LBEToolkit.StateSynchronization
                             continue;
                         }
 
+                        if (highFrequencyPrimitiveData.target == null)
+                        {
+                            if (state.TryGetChild(highFrequencyPrimitiveData.relativePath, out var target))
+                            {
+                                var primitive = (IStateValue)target;
+                                highFrequencyPrimitiveData.target = primitive;
+                                highFrequencyPrimitiveData.serializer = Serialization.GetSerializer(primitive.valueType);
+                                highFrequencyPrimitiveData.subscription = primitive.Subscribe(new ValueObserver(
+                                    onDispose: () => RemoveHighFrequencyPrimitiveInternal(ownerId, primitiveId, false)
+                                ));
+                            }
+                            else
+                            {
+                                continue;
+                            }
+                        }
+
                         highFrequencyPrimitiveData.target.value = highFrequencyPrimitiveData.serializer.Deserialize(reader, highFrequencyPrimitiveData.target is IStateValueArray);
                     }
                 }
@@ -483,7 +518,7 @@ namespace Outernet.LBEToolkit.StateSynchronization
             if (_client.playerId == _client.hostId)
             {
                 synchronized = true;
-                SendInitialSyncToPendingPlayers(_client.players.Except(_synchronizedPlayers).Where(x => x != _client.playerId).ToArray());
+                SendInitialSyncToPlayers(_client.players.Except(_synchronizedPlayers).Where(x => x != _client.playerId).ToArray());
 
                 _initialSyncCompletionSource.TrySetResult(true);
             }
@@ -541,9 +576,11 @@ namespace Outernet.LBEToolkit.StateSynchronization
             }
         }
 
-        public void AddHighFrequencyPrimitive(string path, byte syncRate)
+        public void AddHighFrequencyPrimitive(string relativePath, byte syncRate)
         {
-            if (_localHighFrequencyPrimitives.TryGetValue(path, out var id))
+            var absolutePath = relativePath.StartsWith("/") ? $"{synchronizationTarget.nodePath}{relativePath}" : $"{synchronizationTarget.nodePath}/{relativePath}";
+
+            if (_localHighFrequencyPrimitives.TryGetValue(absolutePath, out var id))
             {
                 var primitive = _highFrequencyPrimitives[id];
                 primitive.syncRate = syncRate;
@@ -551,14 +588,15 @@ namespace Outernet.LBEToolkit.StateSynchronization
             }
 
             id = AllocateHighFrequencyPathId();
-            _localHighFrequencyPrimitives.Add(path, id);
-            AddHighFrequencyPrimitiveInternal(id.ownerId, id.primitiveId, path, syncRate, true, true);
+            _localHighFrequencyPrimitives.Add(absolutePath, id);
+            AddHighFrequencyPrimitiveInternal(id.ownerId, id.primitiveId, relativePath, syncRate, true, true);
         }
 
-        public void RemoveHighFrequencyPrimitive(string path)
+        public void RemoveHighFrequencyPrimitive(string relativePath)
         {
-            var id = _localHighFrequencyPrimitives[path];
-            _localHighFrequencyPrimitives.Remove(path);
+            var absolutePath = relativePath.StartsWith("/") ? $"{synchronizationTarget.nodePath}{relativePath}" : $"{synchronizationTarget.nodePath}/{relativePath}";
+            var id = _localHighFrequencyPrimitives[absolutePath];
+            _localHighFrequencyPrimitives.Remove(absolutePath);
             RemoveHighFrequencyPrimitiveInternal(id.ownerId, id.primitiveId, true);
         }
 
@@ -567,9 +605,14 @@ namespace Outernet.LBEToolkit.StateSynchronization
             synchronized = false;
             _subscriptions?.Dispose();
 
+            _client.onEventReceived -= HandleEventReceived;
+            _client.onHostChanged -= HandleHostChanged;
+            _client.onPlayerEnteredRoom -= HandlePlayerJoined;
+            _client.onPlayerLeftRoom -= HandlePlayerLeft;
+
             _initialSyncCompletionSource?.TrySetCanceled();
 
-            foreach (var highFrequencyPrimitive in _highFrequencyPrimitives.Values)
+            foreach (var highFrequencyPrimitive in _highFrequencyPrimitives.Values.ToArray())
                 highFrequencyPrimitive.subscription.Dispose();
         }
     }
