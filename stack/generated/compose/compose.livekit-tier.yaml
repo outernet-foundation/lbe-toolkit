@@ -2,9 +2,9 @@ services:
   livekit:
     image: ghcr.io/outernet-foundation/mirror/docker.io/livekit/livekit-server:v1.12.0@sha256:2c80c07a3e2bb11b1b49000a029819f8c6a81b3df3fbf0f90fc29b13520f40b6
     annotations:
+      boatyard/lock: livekit=LIVEKIT_SERVER_IMAGE
+      boatyard/publish-port: 6178:6178,5957:5957/udp
       compose.score.dev/workload-name: livekit
-      outernet.internal/lock: livekit=LIVEKIT_SERVER_IMAGE
-      outernet.internal/publish: 6178:6178,5957:5957/udp
     environment:
       LIVEKIT_CONFIG: |-
         port: ${LIVEKIT_SIGNALING_PORT:?err}
@@ -29,10 +29,10 @@ services:
   livekit-token:
     image: ghcr.io/outernet-foundation/lbe-toolkit/livekit-token:${LIVEKIT_TIER__BOATYARD_TREE__LIVEKIT_TOKEN_SHA}
     annotations:
+      boatyard/dockerfile: livekit-token=workloads/livekit-token/Dockerfile
+      boatyard/probe-adapter: python-urllib
+      boatyard/route: /livekit-token/*=livekit-token:8000
       compose.score.dev/workload-name: livekit-token
-      outernet.internal/dockerfile: livekit-token=workloads/livekit-token/Dockerfile
-      outernet.internal/probe-adapter: python-urllib
-      outernet.internal/route: /livekit-token/*=livekit-token:8000
     environment:
       DEPLOYMENT_ENVIRONMENT: ${DEPLOYMENT_ENVIRONMENT:-development}
       LIVEKIT_API_KEY: ${LIVEKIT_API_KEY:?err}
