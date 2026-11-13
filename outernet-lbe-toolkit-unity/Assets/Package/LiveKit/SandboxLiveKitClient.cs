@@ -11,13 +11,14 @@ namespace Outernet.LBEToolkit.StateSynchronization
 {
     public class SandboxLiveKitClient : RealtimeClientComponent
     {
+        private string _sandboxId;
+        private bool _initialized;
+
         public override bool connected => _connected;
         public override int playerId => _playerId;
         public override int hostId => _hostId;
 
         public override IEnumerable<int> players => _idToParticipant.Keys;
-
-        public string sandboxId;
 
         private Room _room;
         private bool _connected;
@@ -182,15 +183,30 @@ namespace Outernet.LBEToolkit.StateSynchronization
             return UniTask.CompletedTask;
         }
 
+        public void Initialize(string sandboxId)
+        {
+            if (connected)
+                throw new Exception("Cannot reconfigure while connected");
+
+            if (string.IsNullOrEmpty(sandboxId))
+                throw new Exception("sandboxId must be provided");
+
+            _sandboxId = sandboxId;
+            _initialized = true;
+        }
+
         public override async UniTask Connect(string roomID, CancellationToken cancellationToken = default)
         {
             if (connected)
                 throw new Exception("Already connected");
 
+            if (!_initialized)
+                throw new Exception("Call Initialize with the deployment config before connecting");
+
             _connected = true;
 
             var identity = Guid.NewGuid();
-            var tokenProvider = new TokenSourceSandbox(sandboxId);
+            var tokenProvider = new TokenSourceSandbox(_sandboxId);
             var fetchConnectionDetailsTask = tokenProvider.FetchConnectionDetails(new()
             {
                 RoomName = roomID,

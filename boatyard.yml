@@ -1,0 +1,16 @@
+requires: ">=0.8"
+repository: ghcr.io/outernet-foundation/lbe-toolkit
+project_name: livekit-tier
+gateway_port: 8443
+platforms:
+  - linux/amd64
+base_images:
+  UV_BASE_IMAGE: "ghcr.io/astral-sh/uv:{uv}-python3.13-trixie-slim"
+  LIVEKIT_SERVER_IMAGE: "docker.io/livekit/livekit-server:v1.12.0"
+services:
+  livekit:
+    options:
+      tier:
+        workloads:
+          - livekit.yaml
+          - livekit-token.yaml

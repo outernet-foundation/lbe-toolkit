@@ -12,14 +12,16 @@ namespace Outernet.LBEToolkit.StateSynchronization
 {
     public class SelfHostedLiveKitClient : RealtimeClientComponent
     {
+        private const string MintRoute = "/livekit-token/connection-details";
+
         public override bool connected => _connected;
         public override int playerId => _playerId;
         public override int hostId => _hostId;
 
         public override IEnumerable<int> players => _idToParticipant.Keys.Append(playerId);
 
-        public string endpointUrl;
-
+        private string _mintEndpointUrl;
+        private bool _initialized;
         private bool _connected;
         private int _playerId;
         private int _hostId;
@@ -146,14 +148,29 @@ namespace Outernet.LBEToolkit.StateSynchronization
             return UniTask.CompletedTask;
         }
 
+        public void Initialize(string backendUrl)
+        {
+            if (connected)
+                throw new Exception("Cannot reconfigure while connected");
+
+            if (string.IsNullOrEmpty(backendUrl))
+                throw new Exception("backendUrl must be provided");
+
+            _mintEndpointUrl = backendUrl.TrimEnd('/') + MintRoute;
+            _initialized = true;
+        }
+
         public override async UniTask Connect(string roomID, CancellationToken cancellationToken = default)
         {
             if (connected)
                 throw new Exception("Already connected");
 
+            if (!_initialized)
+                throw new Exception("Call Initialize with the deployment config before connecting");
+
             _connected = true;
 
-            var tokenProvider = new TokenSourceEndpoint(endpointUrl, null);
+            var tokenProvider = new TokenSourceEndpoint(_mintEndpointUrl, null);
             var fetchConnectionDetailsTask = tokenProvider.FetchConnectionDetails(new()
             {
                 RoomName = roomID,
