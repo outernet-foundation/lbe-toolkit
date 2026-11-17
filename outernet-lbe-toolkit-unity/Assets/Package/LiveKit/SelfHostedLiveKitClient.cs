@@ -6,7 +6,6 @@ using Cysharp.Threading.Tasks;
 using LiveKit;
 using LiveKit.Proto;
 using UnityEngine;
-using Cysharp.Threading;
 
 namespace Outernet.LBEToolkit.StateSynchronization
 {
@@ -192,7 +191,7 @@ namespace Outernet.LBEToolkit.StateSynchronization
             var options = new LiveKit.RoomOptions();
             var connect = _room.Connect(connectionDetails.ServerUrl, connectionDetails.ParticipantToken, options);
 
-            await UniTask.WaitUntil(() => _room.ConnectionState == LiveKit.Proto.ConnectionState.ConnConnected || connect.IsError, cancellationToken: cancellationToken);
+            await UniTask.WaitUntil(() => _room.ConnectionState == ConnectionState.ConnConnected || connect.IsError, cancellationToken: cancellationToken);
 
             if (connect.IsError)
             {

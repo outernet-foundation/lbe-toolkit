@@ -133,7 +133,7 @@ namespace Outernet.LBEToolkit.Example
 
             await realtimeClient.Connect(room, destroyCancellationToken);
             _stateSyncManager = new PeerToPeerStateSyncManager<SynchronizedState>(state.synchronizedState, realtimeClient, "example");
-            await _stateSyncManager.PerformInitialSync();
+            await _stateSyncManager.AwaitInitialSync();
             state.inRoomAndSynchronized.value = true;
         }
 
