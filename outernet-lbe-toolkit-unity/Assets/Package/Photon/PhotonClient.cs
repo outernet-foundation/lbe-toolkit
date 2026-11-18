@@ -25,14 +25,8 @@ namespace Outernet.LBEToolkit.StateSynchronization
 
         public override IEnumerable<int> players => _client.CurrentRoom.Players.Keys;
 
-        public string realtimeId;
-        public bool selfHosted;
-
-        [ToggleGroup(nameof(selfHosted))]
-        public string selfHostedIp;
-
-        [ToggleGroup(nameof(selfHosted))]
-        public ushort selfHostedPort;
+        private string _realtimeId;
+        private bool _initialized;
 
         private PhotonRealtimeClient _client;
         private Dictionary<SyncTarget, ReceiverGroup> _syncTargetToReceiverGroup = new Dictionary<SyncTarget, ReceiverGroup>()
@@ -137,19 +131,27 @@ namespace Outernet.LBEToolkit.StateSynchronization
 
         }
 
+        public void Initialize(string realtimeId)
+        {
+            if (connected)
+                throw new Exception("Cannot reconfigure while connected");
+
+            if (string.IsNullOrEmpty(realtimeId))
+                throw new Exception("realtimeId must be provided");
+
+            _realtimeId = realtimeId;
+            _initialized = true;
+        }
+
         public override async UniTask Connect(string roomID, CancellationToken cancellationToken = default)
         {
             if (connected)
                 return;
 
-            if (selfHosted)
-            {
-                await _client.ConnectUsingSettingsAsync(new AppSettings() { AppIdRealtime = realtimeId, Server = selfHostedIp, Port = selfHostedPort });
-            }
-            else
-            {
-                await _client.ConnectUsingSettingsAsync(new AppSettings() { AppIdRealtime = realtimeId });
-            }
+            if (!_initialized)
+                throw new Exception("Call Initialize with the deployment config before connecting");
+
+            await _client.ConnectUsingSettingsAsync(new AppSettings() { AppIdRealtime = _realtimeId });
 
             cancellationToken.ThrowIfCancellationRequested();
 

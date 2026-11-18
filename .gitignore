@@ -1,2 +1,5 @@
-.env
+boatyard.values.yaml
 .env.self
+metadata.json
+__pycache__/
+stack/score/.score-compose/

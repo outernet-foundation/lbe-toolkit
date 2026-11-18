@@ -64,8 +64,8 @@
   <Project Path="Unity.XR.ARFoundation.VisualScripting.csproj" />
   <Project Path="Unity.VisualScripting.State.csproj" />
   <Project Path="Unity.AI.Navigation.Updater.csproj" />
-  <Project Path="Unity.XR.ARSubsystems.Editor.csproj" />
   <Project Path="Nessle.csproj" />
+  <Project Path="Unity.XR.ARSubsystems.Editor.csproj" />
   <Project Path="UnityEditor.UI.csproj" />
   <Project Path="glTFast.Newtonsoft.csproj" />
   <Project Path="Placeframe.Core.csproj" />

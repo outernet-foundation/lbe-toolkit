@@ -8,6 +8,6 @@ namespace Outernet.LBEToolkit.StateSynchronization
         bool synchronized { get; }
         string topic { get; }
 
-        UniTask PerformInitialSync();
+        UniTask AwaitInitialSync();
     }
 }

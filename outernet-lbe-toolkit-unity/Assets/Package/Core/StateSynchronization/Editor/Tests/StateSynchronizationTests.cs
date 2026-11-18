@@ -2,7 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using FofX;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 using FofX.Stateful;
 using NUnit.Framework;
 using UnityEngine;
@@ -136,6 +137,153 @@ namespace Outernet.LBEToolkit.StateSynchronization.Tests
 
             foreach (var child in state.children.OrderBy(x => x.nodeName))
                 ReadStatePathsRecursive(idCache, root, child, reader);
+        }
+
+        public class InitialSyncState : StateObject
+        {
+            public StateValue<int> someValue { get; private set; }
+            public StateValue<float> someOtherValue { get; private set; }
+        }
+
+        public class TestRealtimeClient : IRealtimeClient
+        {
+            public bool connected { get; private set; }
+            public int playerId { get; private set; }
+            public int hostId { get; private set; }
+
+            public IEnumerable<int> players => _players;
+
+            private HashSet<int> _players = new HashSet<int>();
+
+            public event Action onJoinedRoom;
+            public event Action onLeftRoom;
+            public event Action<int> onHostChanged;
+            public event Action<int> onPlayerEnteredRoom;
+            public event Action<int> onPlayerLeftRoom;
+            public event Action<string> onDisconnectedUnexpectedly;
+            public event Action<int, string, byte[]> onEventReceived;
+
+            public Action<byte[], bool, int[], string> mockSendEvent;
+
+            public void MockHostChanged(int hostId)
+            {
+                this.hostId = hostId;
+                onHostChanged?.Invoke(hostId);
+            }
+
+            public void MockPlayerJoined(int playerId)
+            {
+                if (_players.Add(playerId))
+                    onPlayerEnteredRoom?.Invoke(playerId);
+            }
+
+            public void MockPlayerLeft(int playerId)
+            {
+                if (_players.Remove(playerId))
+                    onPlayerLeftRoom?.Invoke(playerId);
+            }
+
+            public void MockDisconnectedUnexpectedly(string reason)
+            {
+                onDisconnectedUnexpectedly?.Invoke(reason);
+            }
+
+            public void MockEventReceived(int sender, string topic, byte[] data)
+            {
+                onEventReceived?.Invoke(sender, topic, data);
+            }
+
+            public async UniTask MockConnect(string roomId, int playerId, int hostId, int[] players, CancellationToken cancellationToken = default)
+            {
+                this.playerId = playerId;
+                this.hostId = hostId;
+
+                _players.Add(playerId);
+                _players.Add(hostId);
+
+                foreach (var player in players)
+                    _players.Add(player);
+
+                connected = true;
+
+                onJoinedRoom?.Invoke();
+            }
+
+            public UniTask Connect(string roomId, CancellationToken cancellationToken = default)
+                => MockConnect(roomId, 1, 1, new int[] { 1 }, cancellationToken);
+
+            public UniTask Disconnect()
+            {
+                connected = false;
+                playerId = default;
+                hostId = default;
+                _players.Clear();
+                onLeftRoom?.Invoke();
+
+                return UniTask.CompletedTask;
+            }
+
+            public void SendEvent(byte[] data, bool reliable, int[] targets, string topic = null)
+                => mockSendEvent?.Invoke(data, reliable, targets, topic);
+
+            public void SendEvent(byte[] data, bool reliable, SyncTarget target, string topic = null)
+            {
+                if (!connected)
+                    throw new Exception("Not connected");
+
+                int[] targets;
+
+                switch (target)
+                {
+                    case SyncTarget.All:
+                        targets = _players.ToArray();
+                        break;
+
+                    case SyncTarget.Others:
+                        targets = _players.Where(x => x != playerId).ToArray();
+                        break;
+
+                    case SyncTarget.Server:
+                        targets = new int[] { hostId };
+                        break;
+
+                    default:
+                        throw new Exception($"Unhandled sync target {target}");
+                }
+
+                SendEvent(data, reliable, targets, topic);
+            }
+        }
+
+        [Test]
+        public void TestInitialSync()
+        {
+            var s1 = new InitialSyncState();
+            var s2 = new InitialSyncState();
+
+            s1.Initialize(new ObserveThing.ObservationContext(), new DefaultLogger(), "s1");
+            s2.Initialize(new ObserveThing.ObservationContext(), new DefaultLogger(), "s2");
+
+            s1.someValue.value = 2;
+            s1.someOtherValue.value = 1.33f;
+
+            var rtc1 = new TestRealtimeClient();
+            var rtc2 = new TestRealtimeClient();
+
+            rtc1.mockSendEvent = (data, reliable, targets, topic) => rtc2.MockEventReceived(rtc1.playerId, topic, data);
+            rtc2.mockSendEvent = (data, reliable, targets, topic) => rtc1.MockEventReceived(rtc2.playerId, topic, data);
+
+            var sync1 = new PeerToPeerStateSyncManager<InitialSyncState>(s1, rtc1, "test");
+            var sync2 = new PeerToPeerStateSyncManager<InitialSyncState>(s2, rtc2, "test");
+
+            rtc1.MockConnect("test-room", 1, 1, new int[] { 1 }).Forget();
+            rtc1.MockPlayerJoined(2);
+
+            rtc2.MockConnect("test-room", 2, 1, new int[] { 1, 2 }).Forget();
+
+            Assert.IsTrue(sync2.synchronized);
+            Assert.AreEqual(s1.someValue.value, s2.someValue.value);
+            Assert.AreEqual(s1.someOtherValue.value, s2.someOtherValue.value);
         }
     }
 }
