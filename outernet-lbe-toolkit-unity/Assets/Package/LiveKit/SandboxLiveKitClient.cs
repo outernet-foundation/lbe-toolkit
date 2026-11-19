@@ -9,26 +9,35 @@ using UnityEngine;
 
 namespace Outernet.LBEToolkit.StateSynchronization
 {
-    public class SandboxLiveKitClient : RealtimeClientComponent
+    public class SandboxLiveKitClient : IRealtimeClient
     {
+        public bool connected => (_room?.IsConnected ?? false) && _connectionComplete;
+        public int playerId { get; private set; }
+        public int hostId { get; private set; }
+
+        public IEnumerable<int> players => _idToParticipant.Keys;
+
+        public event Action<int> onHostChanged;
+        public event Action<int> onPlayerEnteredRoom;
+        public event Action<int> onPlayerLeftRoom;
+        public event Action<int, string, byte[]> onEventReceived;
+        public event Action<string> onDisconnectedUnexpectedly;
+        public event Action onJoinedRoom;
+        public event Action onLeftRoom;
+
         private string _sandboxId;
-        private bool _initialized;
-
-        public override bool connected => _connected;
-        public override int playerId => _playerId;
-        public override int hostId => _hostId;
-
-        public override IEnumerable<int> players => _idToParticipant.Keys;
-
         private Room _room;
-        private bool _connected;
         private Participant _host;
-        private int _hostId;
-        private int _playerId;
         private int _nextPlayerID = 1;
         private Dictionary<Participant, int> _participantToId = new Dictionary<Participant, int>();
         private Dictionary<int, Participant> _idToParticipant = new Dictionary<int, Participant>();
         private HashSet<Participant> _pendingJoins = new HashSet<Participant>();
+        private bool _connectionComplete;
+
+        public SandboxLiveKitClient(string sandboxId)
+        {
+            _sandboxId = sandboxId;
+        }
 
         private void HandleParticipantConnected(Participant participant)
         {
@@ -52,7 +61,7 @@ namespace Outernet.LBEToolkit.StateSynchronization
             _participantToId.Remove(participant);
             _idToParticipant.Remove(id);
 
-            RaiseOnPlayerLeftRoom(id);
+            onPlayerLeftRoom?.Invoke(id);
 
             if (!TryGetHost(out var newHost, out var newHostID))
             {
@@ -61,11 +70,11 @@ namespace Outernet.LBEToolkit.StateSynchronization
                 _idToParticipant.Add(1, _room.LocalParticipant);
                 _participantToId.Add(_room.LocalParticipant, 1);
 
-                _playerId = 1;
-                _hostId = 1;
+                playerId = 1;
+                hostId = 1;
 
                 _room.LocalParticipant.SetAttributes(new Dictionary<string, string>() { { "id", "1" } });
-                RaiseOnHostChanged(1);
+                onHostChanged?.Invoke(1);
                 return;
             }
 
@@ -73,9 +82,9 @@ namespace Outernet.LBEToolkit.StateSynchronization
                 return;
 
             _host = newHost;
-            _hostId = newHostID;
+            hostId = newHostID;
             _nextPlayerID = _idToParticipant.Keys.Max() + 1;
-            RaiseOnHostChanged(hostId);
+            onHostChanged?.Invoke(hostId);
         }
 
         private void HandleParticipantAttributesChanged(Participant participant)
@@ -93,25 +102,25 @@ namespace Outernet.LBEToolkit.StateSynchronization
             _participantToId.Add(participant, id);
             _idToParticipant.Add(id, participant);
 
-            RaiseOnPlayerEnteredRoom(id);
+            onPlayerEnteredRoom?.Invoke(id);
 
             if (hostId != 0 && id > hostId)
                 return;
 
-            _hostId = id;
-            RaiseOnHostChanged(id);
+            hostId = id;
+            onHostChanged?.Invoke(id);
         }
 
         private void HandleDataReceived(byte[] data, Participant participant, DataPacketKind kind, string topic)
         {
             if (topic == "handleConnect")
             {
-                _playerId = BitConverter.ToInt32(data);
+                playerId = BitConverter.ToInt32(data);
                 _room.LocalParticipant.SetAttributes(new Dictionary<string, string>() { { "id", playerId.ToString() } });
                 _idToParticipant.Add(playerId, _room.LocalParticipant);
                 _participantToId.Add(_room.LocalParticipant, playerId);
 
-                RaiseOnJoinedRoom();
+                onJoinedRoom?.Invoke();
 
                 return;
             }
@@ -119,20 +128,29 @@ namespace Outernet.LBEToolkit.StateSynchronization
             if (playerId == 0)
                 return;
 
-            RaiseOnEventReceived(_participantToId[participant], topic, data);
+            onEventReceived?.Invoke(_participantToId[participant], topic, data);
         }
 
-        private void HandleDisconnected(Room room)
+        private void HandleDisconnected(Room room, DisconnectReason reason)
         {
             if (_room != room)
                 return;
 
-            if (connected)
-            {
-                _room = null;
-                DisconnectInternal(true);
-                RaiseOnDisconnectedUnexpectedly("Disconnected unexpectedly.");
-            }
+            _connectionComplete = false;
+            playerId = 0;
+            hostId = 0;
+            _nextPlayerID = 0;
+
+            _room.Dispose();
+            _room = null;
+            _participantToId.Clear();
+            _idToParticipant.Clear();
+            _pendingJoins.Clear();
+
+            if (reason != DisconnectReason.ClientInitiated)
+                onDisconnectedUnexpectedly?.Invoke(reason.ToString());
+
+            onLeftRoom?.Invoke();
         }
 
         private bool TryGetHost(out Participant host, out int hostID)
@@ -161,52 +179,20 @@ namespace Outernet.LBEToolkit.StateSynchronization
             return true;
         }
 
-        private UniTask DisconnectInternal(bool unexpected)
+        public async UniTask Connect(string roomID, CancellationToken cancellationToken = default)
         {
-            if (!connected)
-                return UniTask.CompletedTask;
+            if (_room != null)
+                throw new Exception("Already connected or connecting");
 
-            _connected = false;
-            _playerId = 0;
-            _hostId = 0;
-
-            _room?.Disconnect();
-            _room = null;
-            _participantToId.Clear();
-            _idToParticipant.Clear();
-
-            if (unexpected)
-                RaiseOnDisconnectedUnexpectedly("Disconnected Unexpectedly");
-
-            RaiseOnLeftRoom();
-
-            return UniTask.CompletedTask;
-        }
-
-        public void Initialize(string sandboxId)
-        {
-            if (connected)
-                throw new Exception("Cannot reconfigure while connected");
-
-            if (string.IsNullOrEmpty(sandboxId))
-                throw new Exception("sandboxId must be provided");
-
-            _sandboxId = sandboxId;
-            _initialized = true;
-        }
-
-        public override async UniTask Connect(string roomID, CancellationToken cancellationToken = default)
-        {
-            if (connected)
-                throw new Exception("Already connected");
-
-            if (!_initialized)
-                throw new Exception("Call Initialize with the deployment config before connecting");
-
-            _connected = true;
+            _room = new Room();
+            _room.ParticipantConnected += HandleParticipantConnected;
+            _room.ParticipantDisconnected += HandleParticipantDiconnected;
+            _room.ParticipantAttributesChanged += HandleParticipantAttributesChanged;
+            _room.DataReceived += HandleDataReceived;
+            _room.DisconnectedWithReason += HandleDisconnected;
 
             var identity = Guid.NewGuid();
-            var tokenProvider = new TokenSourceSandbox(_sandboxId);
+            var tokenProvider = TokenSource.DevelopmentTokenServer(_sandboxId);
             var fetchConnectionDetailsTask = tokenProvider.FetchConnectionDetails(new()
             {
                 RoomName = roomID,
@@ -218,21 +204,14 @@ namespace Outernet.LBEToolkit.StateSynchronization
 
             var connectionDetails = fetchConnectionDetailsTask.Result;
 
-            _room = new Room();
-            _room.ParticipantConnected += HandleParticipantConnected;
-            _room.ParticipantDisconnected += HandleParticipantDiconnected;
-            _room.ParticipantAttributesChanged += HandleParticipantAttributesChanged;
-            _room.DataReceived += HandleDataReceived;
-            _room.Disconnected += HandleDisconnected;
-
             var options = new LiveKit.RoomOptions();
             var connect = _room.Connect(connectionDetails.ServerUrl, connectionDetails.ParticipantToken, options);
 
-            await UniTask.WaitUntil(() => _room.ConnectionState == LiveKit.Proto.ConnectionState.ConnConnected || connect.IsError, cancellationToken: cancellationToken);
+            await UniTask.WaitUntil(() => _room.ConnectionState == ConnectionState.ConnConnected || connect.IsError, cancellationToken: cancellationToken);
 
             if (connect.IsError)
             {
-                _connected = false;
+                _connectionComplete = false;
                 throw new Exception("Connection request failed.");
             }
 
@@ -257,8 +236,8 @@ namespace Outernet.LBEToolkit.StateSynchronization
                 _idToParticipant.Add(1, _room.LocalParticipant);
                 _participantToId.Add(_room.LocalParticipant, 1);
 
-                _playerId = 1;
-                _hostId = 1;
+                playerId = 1;
+                hostId = 1;
                 _nextPlayerID++;
 
                 await _room.LocalParticipant.SetAttributes(new Dictionary<string, string>() { { "id", "1" } });
@@ -267,14 +246,20 @@ namespace Outernet.LBEToolkit.StateSynchronization
             }
 
             _host = host;
-            _hostId = currentHostID;
+            hostId = currentHostID;
             await UniTask.WaitUntil(() => playerId != 0, cancellationToken: cancellationToken);
+
+            _connectionComplete = true;
+            onJoinedRoom?.Invoke();
         }
 
-        public override UniTask Disconnect()
-            => DisconnectInternal(false);
+        public UniTask Disconnect()
+        {
+            _room?.Disconnect();
+            return UniTask.CompletedTask;
+        }
 
-        public override void SendEvent(byte[] data, bool reliable, int[] targets, string topic = null)
+        public void SendEvent(byte[] data, bool reliable, int[] targets, string topic = null)
         {
             if (!connected)
                 throw new Exception("Not connected");
@@ -282,7 +267,7 @@ namespace Outernet.LBEToolkit.StateSynchronization
             _room.LocalParticipant.PublishData(data, targets.Select(x => _idToParticipant[x].Identity).ToArray(), reliable, topic);
         }
 
-        public override void SendEvent(byte[] data, bool reliable, SyncTarget target, string topic = null)
+        public void SendEvent(byte[] data, bool reliable, SyncTarget target, string topic = null)
         {
             if (!connected)
                 throw new Exception("Not connected");
@@ -308,6 +293,12 @@ namespace Outernet.LBEToolkit.StateSynchronization
             }
 
             _room.LocalParticipant.PublishData(data, targets, reliable, topic);
+        }
+
+        public void Dispose()
+        {
+            _room?.Dispose();
+            _room = null;
         }
     }
 }

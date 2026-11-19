@@ -1,7 +1,4 @@
-using UnityEngine;
-
 using System;
-using System.Linq;
 
 using Cysharp.Threading.Tasks;
 
@@ -15,18 +12,26 @@ using PhotonRealtimeClient = Photon.Realtime.RealtimeClient;
 
 namespace Outernet.LBEToolkit.StateSynchronization
 {
-    public class PhotonClient : RealtimeClientComponent, IInRoomCallbacks, IOnEventCallback, IConnectionCallbacks, IMatchmakingCallbacks
+    public class PhotonClient : IRealtimeClient, IInRoomCallbacks, IOnEventCallback, IConnectionCallbacks, IMatchmakingCallbacks
     {
         private const byte DATA_EVENT = 1;
 
-        public override bool connected => _client.InRoom;
-        public override int playerId => _client.LocalPlayer.ActorNumber;
-        public override int hostId => _client.CurrentRoom.MasterClientId;
+        public bool connected => _client.InRoom;
+        public int playerId => _client.LocalPlayer.ActorNumber;
+        public int hostId => _client.CurrentRoom.MasterClientId;
 
-        public override IEnumerable<int> players => _client.CurrentRoom.Players.Keys;
+        public IEnumerable<int> players => _client.CurrentRoom.Players.Keys;
+
+        public event Action<int> onHostChanged;
+        public event Action<int> onPlayerEnteredRoom;
+        public event Action<int> onPlayerLeftRoom;
+        public event Action<int, string, byte[]> onEventReceived;
+        public event Action<string> onDisconnectedUnexpectedly;
+        public event Action onJoinedRoom;
+        public event Action onLeftRoom;
 
         private string _realtimeId;
-        private bool _initialized;
+        private CancellationTokenSource _updateCancellationTokenSource = new CancellationTokenSource();
 
         private PhotonRealtimeClient _client;
         private Dictionary<SyncTarget, ReceiverGroup> _syncTargetToReceiverGroup = new Dictionary<SyncTarget, ReceiverGroup>()
@@ -36,46 +41,55 @@ namespace Outernet.LBEToolkit.StateSynchronization
             { SyncTarget.Server, ReceiverGroup.MasterClient }
         };
 
-        private void Awake()
+        public PhotonClient(string realtimeId)
         {
             AsyncSetup.Startup();
 
+            _realtimeId = realtimeId;
             _client = new PhotonRealtimeClient(ConnectionProtocol.Tcp);
             _client.AddCallbackTarget(this);
+
+            Update(_updateCancellationTokenSource.Token).Forget();
+            LateUpdate(_updateCancellationTokenSource.Token).Forget();
         }
 
-        private void Update()
+        private async UniTask Update(CancellationToken cancellationToken = default)
         {
-            while (true)
+            while (!cancellationToken.IsCancellationRequested)
             {
-                if (!_client.DispatchIncomingCommands())
-                    break;
+                while (true)
+                {
+                    if (!_client.DispatchIncomingCommands())
+                        break;
+                }
+
+                await UniTask.Yield(PlayerLoopTiming.Update);
             }
         }
 
-        private void LateUpdate()
+        private async UniTask LateUpdate(CancellationToken cancellationToken = default)
         {
-            while (true)
+            while (!cancellationToken.IsCancellationRequested)
             {
-                if (!_client.SendOutgoingCommands())
-                    break;
-            }
-        }
+                while (true)
+                {
+                    if (!_client.DispatchIncomingCommands())
+                        break;
+                }
 
-        private void OnDestroy()
-        {
-            _client.Disconnect();
+                await UniTask.Yield(PlayerLoopTiming.PostLateUpdate);
+            }
         }
 
         // IInRoomCallbacks
         public void OnPlayerEnteredRoom(Player newPlayer)
         {
-            RaiseOnPlayerEnteredRoom(newPlayer.ActorNumber);
+            onPlayerEnteredRoom?.Invoke(newPlayer.ActorNumber);
         }
 
         public void OnPlayerLeftRoom(Player otherPlayer)
         {
-            RaiseOnPlayerLeftRoom(otherPlayer.ActorNumber);
+            onPlayerLeftRoom?.Invoke(otherPlayer.ActorNumber);
         }
 
         public void OnPlayerPropertiesUpdate(Player targetPlayer, PhotonHashtable changedProps)
@@ -85,7 +99,7 @@ namespace Outernet.LBEToolkit.StateSynchronization
 
         public void OnMasterClientSwitched(Player newMasterClient)
         {
-            RaiseOnHostChanged(hostId);
+            onHostChanged?.Invoke(hostId);
         }
 
         public void OnRoomPropertiesUpdate(PhotonHashtable propertiesThatChanged) { }
@@ -100,7 +114,7 @@ namespace Outernet.LBEToolkit.StateSynchronization
             var topic = message[0];
             var data = message[1];
 
-            RaiseOnEventReceived(photonEvent.Sender, topic == null ? null : (string)topic, (byte[])data);
+            onEventReceived?.Invoke(photonEvent.Sender, topic == null ? null : (string)topic, (byte[])data);
         }
 
         // IConnectionCallbacks
@@ -113,7 +127,7 @@ namespace Outernet.LBEToolkit.StateSynchronization
             _client.Disconnect();
 
             if (connected)
-                RaiseOnDisconnectedUnexpectedly(cause.ToString());
+                onDisconnectedUnexpectedly?.Invoke(cause.ToString());
         }
 
         public void OnRegionListReceived(RegionHandler regionHandler)
@@ -131,25 +145,10 @@ namespace Outernet.LBEToolkit.StateSynchronization
 
         }
 
-        public void Initialize(string realtimeId)
-        {
-            if (connected)
-                throw new Exception("Cannot reconfigure while connected");
-
-            if (string.IsNullOrEmpty(realtimeId))
-                throw new Exception("realtimeId must be provided");
-
-            _realtimeId = realtimeId;
-            _initialized = true;
-        }
-
-        public override async UniTask Connect(string roomID, CancellationToken cancellationToken = default)
+        public async UniTask Connect(string roomID, CancellationToken cancellationToken = default)
         {
             if (connected)
                 return;
-
-            if (!_initialized)
-                throw new Exception("Call Initialize with the deployment config before connecting");
 
             await _client.ConnectUsingSettingsAsync(new AppSettings() { AppIdRealtime = _realtimeId });
 
@@ -166,7 +165,7 @@ namespace Outernet.LBEToolkit.StateSynchronization
             await UniTask.SwitchToMainThread(cancellationToken: cancellationToken);
         }
 
-        public override async UniTask Disconnect()
+        public async UniTask Disconnect()
         {
             if (!connected)
                 return;
@@ -175,7 +174,7 @@ namespace Outernet.LBEToolkit.StateSynchronization
             await _client.DisconnectAsync();
         }
 
-        public override void SendEvent(byte[] data, bool reliable, int[] targets, string topic = null)
+        public void SendEvent(byte[] data, bool reliable, int[] targets, string topic = null)
         {
             var message = new object[] { data, topic };
             _client.OpRaiseEvent(
@@ -186,7 +185,7 @@ namespace Outernet.LBEToolkit.StateSynchronization
             );
         }
 
-        public override void SendEvent(byte[] data, bool reliable, SyncTarget target, string topic = null)
+        public void SendEvent(byte[] data, bool reliable, SyncTarget target, string topic = null)
         {
             var message = new object[] { data, topic };
             _client.OpRaiseEvent(
@@ -214,7 +213,7 @@ namespace Outernet.LBEToolkit.StateSynchronization
 
         public void OnJoinedRoom()
         {
-            RaiseOnJoinedRoom();
+            onJoinedRoom?.Invoke();
         }
 
         public void OnJoinRoomFailed(short returnCode, string message)
@@ -229,7 +228,15 @@ namespace Outernet.LBEToolkit.StateSynchronization
 
         public void OnLeftRoom()
         {
-            RaiseOnLeftRoom();
+            onLeftRoom?.Invoke();
+        }
+
+        public void Dispose()
+        {
+            _client.Disconnect();
+            _updateCancellationTokenSource.Cancel();
+            _updateCancellationTokenSource.Dispose();
+            _updateCancellationTokenSource = null;
         }
     }
 }

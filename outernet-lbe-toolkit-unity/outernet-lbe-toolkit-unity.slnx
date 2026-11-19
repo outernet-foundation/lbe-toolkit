@@ -100,13 +100,13 @@
   <Project Path="UnityEditor.UI.Analytics.csproj" />
   <Project Path="UniTask.TextMeshPro.csproj" />
   <Project Path="Unity.XR.ARCore.Editor.csproj" />
-  <Project Path="org.outernet.lbetoolkit.statesynchronization.csproj" />
   <Project Path="Unity.InputSystem.TestFramework.csproj" />
   <Project Path="Unity.XR.Interaction.Toolkit.Samples.DeviceSimulator.csproj" />
   <Project Path="UnityEditor.XR.LegacyInputHelpers.csproj" />
   <Project Path="Unity.ShaderGraph.Utilities.csproj" />
   <Project Path="Unity.XR.Interaction.Toolkit.Samples.SpatialKeyboard.Editor.csproj" />
   <Project Path="Unity.VisualScripting.Shared.Editor.csproj" />
+  <Project Path="org.outernet.lbetoolkit.statesynchronization.csproj" />
   <Project Path="Unity.XR.ARFoundation.InternalUtils.csproj" />
   <Project Path="Unity.XR.ARFoundation.Editor.csproj" />
   <Project Path="Unity.EditorCoroutines.Editor.csproj" />
