@@ -253,6 +253,8 @@ namespace Outernet.LBEToolkit.StateSynchronization.Tests
 
                 SendEvent(data, reliable, targets, topic);
             }
+
+            public void Dispose() { }
         }
 
         [Test]

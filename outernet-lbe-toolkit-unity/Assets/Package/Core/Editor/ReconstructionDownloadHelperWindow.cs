@@ -20,7 +20,7 @@ using PlaceframeApiClient.Client;
 using R3;
 
 using System.Runtime.InteropServices;
-using Vector3 = UnityEngine.Vector3;
+using Unity.Mathematics;
 
 namespace Outernet.LBEToolkit
 {
@@ -47,6 +47,8 @@ namespace Outernet.LBEToolkit
         private DefaultApi _api;
         private int _reconstructionIndex = 0;
         private List<ReconstructionData> _reconstructions = new List<ReconstructionData>();
+        private double3 _ecefPosition;
+        private quaternion _ecefRotation;
 
         private bool _loggedIn => _api != null;
         private bool _loggingIn => _loginSelected && !_loggedIn && !_loginError;
@@ -126,27 +128,67 @@ namespace Outernet.LBEToolkit
 
             EditorGUILayout.Separator();
 
-            EditorGUILayout.LabelField("Download");
+            EditorGUILayout.LabelField("Reconstructions");
 
-            EditorGUILayout.BeginHorizontal();
+            using (new EditorGUILayout.HorizontalScope())
+            {
+                _reconstructionIndex = EditorGUILayout.Popup(
+                    "Reconstruction",
+                    _reconstructionIndex,
+                    _reconstructions.Where(x => x.status == ReconstructionStatus.Succeeded)
+                        .Select(x => $"{x.name} [{x.id.ToString().Substring(0, 5)}]")
+                        .ToArray()
+                );
 
-            _reconstructionIndex = EditorGUILayout.Popup(
-                "Reconstruction",
-                _reconstructionIndex,
-                _reconstructions.Where(x => x.status == ReconstructionStatus.Succeeded)
-                    .Select(x => $"{x.name} [{x.id.ToString().Substring(0, 5)}]")
-                    .ToArray()
-            );
-
-            if (GUILayout.Button("Refresh", GUILayout.MaxWidth(100)))
-                RefreshReconstructions().Forget();
-
-            EditorGUILayout.EndHorizontal();
+                if (GUILayout.Button("Refresh", GUILayout.MaxWidth(100)))
+                    RefreshReconstructions().Forget();
+            }
 
             GUI.enabled = GUI.enabled && _loggedIn && _reconstructionIndex < _reconstructions.Count;
 
-            if (GUILayout.Button("Download"))
+            EditorGUILayout.LabelField("Download");
+
+            if (GUILayout.Button("Download Pointcloud"))
                 DownloadAndSave(_reconstructions[_reconstructionIndex].id, _reconstructions[_reconstructionIndex].name).Forget();
+
+            EditorGUILayout.LabelField("Register");
+
+            using (new EditorGUILayout.HorizontalScope())
+            {
+                EditorGUILayout.PrefixLabel("ECEF Position");
+
+                GUILayout.Label("x");
+                _ecefPosition.x = EditorGUILayout.DoubleField(_ecefPosition.x);
+
+                GUILayout.Label("y");
+                _ecefPosition.y = EditorGUILayout.DoubleField(_ecefPosition.y);
+
+                GUILayout.Label("z");
+                _ecefPosition.z = EditorGUILayout.DoubleField(_ecefPosition.z);
+            }
+
+            using (new EditorGUILayout.HorizontalScope())
+            {
+                EditorGUILayout.PrefixLabel("ECEF Rotation");
+
+                GUILayout.Label("x");
+                _ecefRotation.value.x = EditorGUILayout.FloatField(_ecefRotation.value.x);
+
+                GUILayout.Label("y");
+                _ecefRotation.value.y = EditorGUILayout.FloatField(_ecefRotation.value.y);
+
+                GUILayout.Label("z");
+                _ecefRotation.value.z = EditorGUILayout.FloatField(_ecefRotation.value.z);
+
+                GUILayout.Label("w");
+                _ecefRotation.value.w = EditorGUILayout.FloatField(_ecefRotation.value.w);
+            }
+
+            if (GUILayout.Button("Create Or Update Localization Map"))
+                CreateOrUpdateLocalizationMap(_reconstructions[_reconstructionIndex].id, _ecefPosition, _ecefRotation).Forget();
+
+            if (GUILayout.Button("Delete Localization Map"))
+                DeleteLocalizationMap(_reconstructions[_reconstructionIndex].id).Forget();
 
             GUI.enabled = wasEnabled;
         }
@@ -255,6 +297,51 @@ namespace Outernet.LBEToolkit
 
             AssetDatabase.CreateAsset(mesh, outputPath);
             AssetDatabase.Refresh();
+        }
+
+        private async UniTask CreateOrUpdateLocalizationMap(Guid reconstructionID, double3 ecefPosition, quaternion ecefRotation)
+        {
+            var localizationMaps = await _api.GetLocalizationMapsAsync(reconstructionIds: new List<Guid>() { reconstructionID });
+
+            if (localizationMaps.Count == 0)
+            {
+                await _api.CreateLocalizationMapAsync(new LocalizationMapCreate(
+                    reconstructionID,
+                    ecefRotation.value.y,
+                    ecefPosition.x,
+                    ecefPosition.y,
+                    ecefPosition.z,
+                    ecefRotation.value.x,
+                    ecefRotation.value.z,
+                    ecefRotation.value.w,
+                    0
+                ));
+            }
+            else
+            {
+                await _api.UpdateLocalizationMapAsync(
+                    localizationMaps[0].Id,
+                    new LocalizationMapUpdate()
+                    {
+                        PositionX = ecefPosition.x,
+                        PositionY = ecefPosition.y,
+                        PositionZ = ecefPosition.z,
+                        RotationX = ecefRotation.value.x,
+                        RotationY = ecefRotation.value.y,
+                        RotationZ = ecefRotation.value.z,
+                        RotationW = ecefRotation.value.w,
+                    }
+                );
+            }
+        }
+
+        private async UniTask DeleteLocalizationMap(Guid reconstructionID)
+        {
+            var localizationMaps = await _api.GetLocalizationMapsAsync(reconstructionIds: new List<Guid>() { reconstructionID });
+            if (localizationMaps.Count == 0)
+                return;
+
+            await _api.DeleteLocalizationMapAsync(localizationMaps[0].Id);
         }
 
         private async UniTask<ReconstructionPoint[]> GetReconstructionPoints(Guid reconstructionID, CancellationToken cancellationToken = default)

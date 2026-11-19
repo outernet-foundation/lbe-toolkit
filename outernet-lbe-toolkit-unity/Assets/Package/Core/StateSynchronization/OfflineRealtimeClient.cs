@@ -53,5 +53,7 @@ namespace Outernet.LBEToolkit.StateSynchronization
             if (target == SyncTarget.All || target == SyncTarget.Server)
                 onEventReceived?.Invoke(playerId, topic, data);
         }
+
+        public void Dispose() { }
     }
 }

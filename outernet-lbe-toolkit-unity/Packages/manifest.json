@@ -45,7 +45,7 @@
     "com.unity.xr.hands": "1.7.2",
     "com.unity.xr.management": "4.5.3",
     "com.unity.xr.openxr": "1.16.1",
-    "io.livekit.livekit-sdk": "2.0.0",
+    "io.livekit.livekit-sdk": "2.1.1",
     "org.outernet.placeframe": "2.0.0-dev.1336",
     "org.outernet.placeframe.apiclient": "2.0.0-dev.1336",
     "org.outernet.placeframe.arfoundation": "2.0.0-dev.1336",

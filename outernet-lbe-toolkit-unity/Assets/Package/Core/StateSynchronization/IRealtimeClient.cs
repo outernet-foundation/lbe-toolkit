@@ -13,7 +13,7 @@ namespace Outernet.LBEToolkit.StateSynchronization
         Server
     }
 
-    public interface IRealtimeClient
+    public interface IRealtimeClient : IDisposable
     {
         bool connected { get; }
 

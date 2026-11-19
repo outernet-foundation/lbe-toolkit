@@ -1,17 +1,17 @@
 using System;
-using System.Threading;
-using Cysharp.Threading.Tasks;
-using UnityEngine;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
+using System.Threading;
+using UnityEngine;
 
 namespace Outernet.LBEToolkit.StateSynchronization
 {
     public abstract class RealtimeClientComponent : MonoBehaviour, IRealtimeClient
     {
-        public abstract int playerId { get; }
-        public abstract int hostId { get; }
-        public abstract IEnumerable<int> players { get; }
-        public abstract bool connected { get; }
+        public bool connected => _client.connected;
+        public int playerId => _client.playerId;
+        public int hostId => _client.hostId;
+        public IEnumerable<int> players => _client.players;
 
         public event Action<int> onHostChanged;
         public event Action<int> onPlayerEnteredRoom;
@@ -21,30 +21,45 @@ namespace Outernet.LBEToolkit.StateSynchronization
         public event Action onJoinedRoom;
         public event Action onLeftRoom;
 
-        public abstract UniTask Connect(string roomID, CancellationToken cancellationToken = default);
-        public abstract UniTask Disconnect();
-        public abstract void SendEvent(byte[] data, bool reliable, int[] targets, string topic = null);
-        public abstract void SendEvent(byte[] data, bool reliable, SyncTarget target, string topic = null);
+        private IRealtimeClient _client;
 
-        protected void RaiseOnHostChanged(int hostId)
-            => onHostChanged?.Invoke(hostId);
+        private IRealtimeClient GetClient()
+        {
+            if (_client == null)
+                throw new Exception($"Client is not set! Call {nameof(SetClientInstance)} before invoking member methods!");
 
-        protected void RaiseOnPlayerEnteredRoom(int playerId)
-            => onPlayerEnteredRoom?.Invoke(playerId);
+            return _client;
+        }
 
-        protected void RaiseOnPlayerLeftRoom(int playerId)
-            => onPlayerLeftRoom?.Invoke(playerId);
+        protected void SetClientInstance(IRealtimeClient client)
+        {
+            if (_client == null)
+                throw new Exception("Client can only be set once");
 
-        protected void RaiseOnEventReceived(int senderId, string topic, byte[] data)
-            => onEventReceived?.Invoke(senderId, topic, data);
+            _client = client;
 
-        protected void RaiseOnDisconnectedUnexpectedly(string cause)
-            => onDisconnectedUnexpectedly?.Invoke(cause);
+            _client.onHostChanged += host => onHostChanged?.Invoke(host);
+            _client.onPlayerEnteredRoom += player => onPlayerEnteredRoom?.Invoke(player);
+            _client.onPlayerLeftRoom += player => onPlayerLeftRoom?.Invoke(player);
+            _client.onEventReceived += (sender, topic, data) => onEventReceived?.Invoke(sender, topic, data);
+            _client.onDisconnectedUnexpectedly += reason => onDisconnectedUnexpectedly?.Invoke(reason);
+            _client.onJoinedRoom += () => onJoinedRoom?.Invoke();
+            _client.onLeftRoom += () => onLeftRoom?.Invoke();
+        }
 
-        protected void RaiseOnJoinedRoom()
-            => onJoinedRoom?.Invoke();
+        public UniTask Connect(string roomID, CancellationToken cancellationToken = default)
+            => GetClient().Connect(roomID, cancellationToken);
 
-        protected void RaiseOnLeftRoom()
-            => onLeftRoom?.Invoke();
+        public UniTask Disconnect()
+            => GetClient().Disconnect();
+
+        public void SendEvent(byte[] data, bool reliable, int[] targets, string topic = null)
+            => GetClient().SendEvent(data, reliable, targets, topic);
+
+        public void SendEvent(byte[] data, bool reliable, SyncTarget target, string topic = null)
+            => GetClient().SendEvent(data, reliable, target, topic);
+
+        public void Dispose()
+            => GetClient().Dispose();
     }
 }
