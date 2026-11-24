@@ -2,20 +2,26 @@ apiVersion: score.dev/v1b1
 metadata:
   name: livekit-token
   annotations:
-    # The route the consumer's gateway mounts.
-    boatyard/route: /livekit-token/*=livekit-token:8000
-    boatyard/dockerfile: livekit-token=workloads/livekit-token/Dockerfile
     boatyard/probe-adapter: python-urllib
+boatyard:
+  # The route the consumer's gateway mounts.
+  route:
+    path: /livekit-token/*
+    port: http
+  dockerfile:
+    livekit-token: workloads/livekit-token/Dockerfile
+listeners:
+  http: 8000
 containers:
   livekit-token:
     livenessProbe:
       httpGet:
         path: /livekit-token/health
-        port: 8000
+        port: http
     readinessProbe:
       httpGet:
         path: /livekit-token/health
-        port: 8000
+        port: http
     variables:
       LIVEKIT_API_KEY: ${resources.livekit-config.api_key}
       LIVEKIT_API_SECRET: ${resources.livekit-config.api_secret}
