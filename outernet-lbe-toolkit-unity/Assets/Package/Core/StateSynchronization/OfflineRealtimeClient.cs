@@ -31,6 +31,7 @@ namespace Outernet.LBEToolkit.StateSynchronization
             playerId = 1;
             players = new int[] { 1 };
             connected = true;
+            onJoinedRoom?.Invoke();
             return UniTask.CompletedTask;
         }
 
@@ -39,6 +40,7 @@ namespace Outernet.LBEToolkit.StateSynchronization
             hostId = 0;
             playerId = 0;
             connected = false;
+            onLeftRoom?.Invoke();
             return UniTask.CompletedTask;
         }
 
@@ -54,6 +56,13 @@ namespace Outernet.LBEToolkit.StateSynchronization
                 onEventReceived?.Invoke(playerId, topic, data);
         }
 
-        public void Dispose() { }
+        public void Dispose()
+        {
+            if(connected)
+            {
+                connected = false;
+                onLeftRoom?.Invoke();
+            }
+        }
     }
 }
